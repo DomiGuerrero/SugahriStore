@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SugahriStore.Datos;
 
 namespace SugahriStore;
 
@@ -6,6 +7,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
+		BaseDeDatosContext context = new BaseDeDatosContext();
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()

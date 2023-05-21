@@ -4,17 +4,34 @@
              x:Class="SugahriStore.UsuariosView"
              BackgroundColor="#FEE2E2">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-            <StackLayout Margin="20" BackgroundColor="#FFFFFF" Padding="20" HorizontalOptions="FillAndExpand">
-                <Image Source="placeholder.jpg" Aspect="AspectFill" HeightRequest="150" WidthRequest="150" Margin="0,0,0,30"/>
-                <Label Text="Información del usuario" FontSize="26" TextColor="#ffb7c5" FontFamily="Montserrat" Margin="0,0,0,20" HorizontalTextAlignment="Center" />
-                <Label x:Name="NombreProeba" Margin="0,0,0,20" FontSize="20" FontFamily="Montserrat" TextColor="#1D3557" HorizontalTextAlignment="Center" />
-                <Label x:Name="RolName" Margin="0,0,0,20" FontSize="20" FontFamily="Montserrat" TextColor="#1D3557" HorizontalTextAlignment="Center" />
-                <Button Text="Volver" Command="{Binding Volver}" BackgroundColor="#FF3860" TextColor="#FFFFFF" CornerRadius="5" FontSize="20" FontFamily="Montserrat" Margin="0,20,0,0" />
-            </StackLayout>
-        </StackLayout>
+        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <!-- Fila para la imagen de fondo -->
+                <RowDefinition Height="Auto" />
+                <!-- Fila para el resto del contenido -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Imagen de fondo -->
+            <Image Source="fondo3.jpg" Aspect="AspectFill" Opacity="0.7" Grid.RowSpan="3" />
+
+            <!-- Contenedor del contenido principal -->
+            <Frame Grid.Row="1" Margin="20" BackgroundColor="#FFFFFF" Padding="20" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" CornerRadius="10" BorderColor="#FFB7C5" HasShadow="True" >
+                <!-- Contenido principal -->
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Image Source="placeholder.jpg" Aspect="AspectFill" HeightRequest="150" WidthRequest="150" Margin="0,0,0,30"/>
+                    <Label Text="Información del usuario" FontSize="26" TextColor="#ffb7c5" FontFamily="Montserrat" Margin="0,0,0,20" HorizontalTextAlignment="Center" />
+                    <Label x:Name="NombreProeba" Margin="0,0,0,20" FontSize="20" FontFamily="Montserrat" TextColor="#1D3557" HorizontalTextAlignment="Center" />
+                    <Label x:Name="RolName" Margin="0,0,0,20" FontSize="20" FontFamily="Montserrat" TextColor="#1D3557" HorizontalTextAlignment="Center" />
+                    <Button Text="Volver" Command="{Binding Volver}" BackgroundColor="#FF3860" TextColor="#FFFFFF" CornerRadius="5" FontSize="20" FontFamily="Montserrat" Margin="0,0,0,0" />
+                </StackLayout>
+            </Frame>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
+
+
 
 
 

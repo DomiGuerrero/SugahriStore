@@ -1,3 +1,4 @@
+using SugahriStore.Datos;
 using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Modelos;
 using SugahriStore.Vistas;
@@ -13,6 +14,7 @@ public partial class ProductosView : ContentPage
     public MainPage MainPageView;
     private List<Producto> _productos;
     private List<Producto> _productosFiltrados;
+    ProductosRepositorio ProductosRepositorio = new();
     public List<Producto> Productos
     {
         get => _productosFiltrados;
@@ -25,7 +27,7 @@ public partial class ProductosView : ContentPage
     public ProductosView(MainPage mainPage)
     {
         InitializeComponent();
-        _productos = CsvManagement.DeserializarProductos();
+        _productos = ProductosRepositorio.ObtenerTodos();
         _productosFiltrados = _productos;
         MainPageView = mainPage;
         BindingContext = this;

@@ -2,7 +2,7 @@ using SugahriStore.Modelos;
 using Microsoft.Maui.Controls.Compatibility;
 using System.Collections.Generic;
 using System.Linq;
-using SugahriStore.ManejoDatos;
+using SugahriStore.Datos;
 using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Vistas;
 using Microsoft.Maui.Controls;
@@ -45,6 +45,8 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BindingContext = this;
         Usuario = usuario;
+        NombreProeba.Text = "Nombre: " + usuario.Nombre;
+        RolName.Text = "Rol: " + usuario.Rol.Nombre;
         LogicaViews.StartTimer(carouselView,Images);
     }
 

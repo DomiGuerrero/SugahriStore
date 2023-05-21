@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Prototipo_1_SugahriStore"
+             xmlns:local="clr-namespace:SugahriStore"
              x:Class="SugahriStore.MainPage"
              Title="SugahriStore">
     <Grid>
-        <Image Source="fondo3.jpg" Aspect="AspectFill" />
         <Image Source="fondo2.jpg" Aspect="AspectFill" />
         <Grid>
             <!-- Menú lateral -->
@@ -63,50 +62,34 @@
                             </CarouselView.ItemTemplate>
                         </CarouselView>
                     </Frame>
-                    <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,10">
+                    <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Start" >
                         <Button Text="Anterior" Clicked="PreviousButton_Clicked" BackgroundColor="#E87191" TextColor="White" CornerRadius="5" Padding="10" />
                         <Button Text="Siguiente" Clicked="NextButton_Clicked" BackgroundColor="#E87191" TextColor="White" CornerRadius="5" Padding="10" />
                     </StackLayout>
-                    <Grid Grid.Row="1" Margin="100">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Margin="75">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition  Height="*"/>
+                            <RowDefinition  Height="Auto"/>
 
-                        <!-- Aquí puedes agregar los elementos adicionales que deseas después de los botones de navegación del carrusel -->
-                        <Grid BackgroundColor="Transparent" Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        </Grid.RowDefinitions>
+                        <Image Grid.Column="0" Grid.Row="0" Source="fondo6.png" Aspect="AspectFill" Grid.ColumnSpan="2" />
+                        <Frame Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" CornerRadius="5" BorderColor="#FF69B4" HasShadow="True">
 
-                            <!-- Última Actualización -->
-                            <Label Text="Última Actualización:" FontFamily="Montserrat" TextColor="White" Grid.Row="0" Grid.Column="0" />
-                            <Label x:Name="UltimaActualizacion" FontFamily="Montserrat" TextColor="White" Grid.Row="0" Grid.Column="1" />
-
-                            <!-- Último Pedido -->
-                            <Label Text="Último Pedido:" FontFamily="Montserrat" TextColor="White" Grid.Row="1" Grid.Column="0" />
-                            <Label x:Name="UltimoPedido" FontFamily="Montserrat" TextColor="White" Grid.Row="1" Grid.Column="1" />
-
-                            <!-- Número de Pedidos -->
-                            <Label Text="Número de Pedidos:" FontFamily="Montserrat" TextColor="White" Grid.Row="2" Grid.Column="0" />
-                            <Label x:Name="NumeroPedidos" FontFamily="Montserrat" TextColor="White" Grid.Row="2" Grid.Column="1" />
-                        </Grid>
-
-
+                            <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Source="placeholder.jpg" Aspect="AspectFill" HeightRequest="250" WidthRequest="250" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                <StackLayout Spacing="20" HorizontalOptions="Start">
+                                    <Label Text="Usuario" FontSize="30" TextColor="IndianRed" FontFamily="Montserrat" />
+                                    <Label x:Name="NombreProeba" FontSize="20" FontFamily="Roboto" TextColor="IndianRed" />
+                                    <Label x:Name="RolName" FontSize="20" FontFamily="Roboto" TextColor="IndianRed" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
                     </Grid>
                 </Grid>
-                
-
             </Grid>
         </Grid>
     </Grid>

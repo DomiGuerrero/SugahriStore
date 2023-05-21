@@ -34,23 +34,55 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Padding="20" BackgroundColor="{StaticResource BackgroundColor}">
-            <Label Text="Información del Pedido" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}"/>
-            <Frame CornerRadius="10" HasShadow="True">
+        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="{StaticResource BackgroundColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ScrollView Grid.Column="0">
                 <StackLayout Padding="20">
-                    <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                    <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20"/>
-                    <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                    <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20"/>
-                    <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                    <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20"/>
-                    <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                    <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20"/>
+                    <Label Text="Información del Pedido" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}"/>
+                    <Frame CornerRadius="10" HasShadow="True">
+                        <StackLayout Padding="20">
+                            <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                            <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20"/>
+                            <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                            <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20"/>
+                            <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                            <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20"/>
+                            <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                            <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20"/>
+                        </StackLayout>
+                    </Frame>
+                    <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding GuardarPedidoCommand}"/>
+                    <Button Text="Ver Productos" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding VerPedidoCommand}"/>
                 </StackLayout>
-            </Frame>
-            <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding GuardarPedidoCommand}"/>
-            <Button Text="Ver Productos" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding VerPedidoCommand}"/>
-        </StackLayout>
+            </ScrollView>
+
+            <ScrollView Grid.Column="1">
+                <StackLayout Padding="20">
+                    <!-- Aquí puedes iterar sobre la lista de LineasPedido y mostrar la información de cada línea -->
+                    <Label Text="Articulos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}" />
+
+                    <!-- Aquí debes iterar sobre la lista de LineasPedido y mostrar la información de cada línea -->
+                    <ListView ItemsSource="{Binding LineasPedido}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout>
+                                        <!-- Aquí debes mostrar los detalles de cada línea de pedido -->
+                                        <Label Text="{Binding Nombre}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                                        <Label Text="{Binding Precio}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                                        <Label Text="{Binding Cantidad}" FontSize="Medium" Margin="0,0,0,20" TextColor="{StaticResource TextColor}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
     </ContentPage.Content>
 
 </ContentPage>

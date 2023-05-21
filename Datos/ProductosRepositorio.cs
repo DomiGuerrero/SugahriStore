@@ -3,15 +3,15 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SugahriStore.Modelos;
 
-namespace SugahriStore.ManejoDatos
+namespace SugahriStore.Datos
 {
     public class ProductosRepositorio
     {
         private readonly BaseDeDatosContext _context;
 
-        public ProductosRepositorio(BaseDeDatosContext context)
+        public ProductosRepositorio()
         {
-            _context = context;
+            _context = new BaseDeDatosContext();
         }
 
         // Obtener todos los productos
@@ -27,9 +27,15 @@ namespace SugahriStore.ManejoDatos
         }
 
         // Agregar un nuevo producto a la base de datos
-        public void Agregar(Producto producto)
+        public void AgregarProducto(Producto producto)
         {
             _context.Productos.Add(producto);
+            _context.SaveChanges();
+        }
+        // Agregar una nueva lista de productos a la base de datos
+        public void AgregarProductos(List<Producto> productos)
+        {
+            _context.Productos.AddRange(productos);
             _context.SaveChanges();
         }
 

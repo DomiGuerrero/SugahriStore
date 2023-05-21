@@ -9,11 +9,47 @@ public partial class DetallePedido : ContentPage
     public string Divisa => _pedido.Divisa;
     public decimal PrecioTotal => _pedido.Total;
 
+    private ListView LineasPedidoListView;
+
     public DetallePedido(Pedido pedido)
     {
         InitializeComponent();
         _pedido = pedido;
         BindingContext = this;
+
+        // Configurar el ListView con las líneas de pedido
+        LineasPedidoListView = new ListView
+        {
+            ItemsSource = _pedido.LineasPedido,
+            ItemTemplate = new DataTemplate(() =>
+            {
+                var nameLabel = new Label();
+                nameLabel.SetBinding(Label.TextProperty, "Nombre");
+                var priceLabel = new Label();
+                priceLabel.SetBinding(Label.TextProperty, "Precio");
+                var quantityLabel = new Label();
+                quantityLabel.SetBinding(Label.TextProperty, "Cantidad");
+
+                var viewCell = new ViewCell
+                {
+                    View = new StackLayout
+                    {
+                        Children = { nameLabel, priceLabel, quantityLabel }
+                    }
+                };
+
+                return viewCell;
+            })
+        };
+
+        // Crear el ScrollView para el ListView de líneas de pedido
+        var scrollView = new ScrollView
+        {
+            Content = LineasPedidoListView
+        };
+
+        // Agregar el ScrollView al StackLayout principal
+        //StackLayout.Children.Add(scrollView);
     }
 
     private void GuardarPedidoCommand(object sender, EventArgs e)

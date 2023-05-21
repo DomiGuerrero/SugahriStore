@@ -11,6 +11,7 @@ public partial class LoginView : ContentPage
     readonly Login login = new();
     readonly List<Usuario> usuarios;
     UsuariosRepositorio UsuariosRepositorio  = new();
+    RolesRepositorio RolesRepositorio = new();
 
     public LoginView()
     {
@@ -25,7 +26,14 @@ public partial class LoginView : ContentPage
         {
             if (login.LoginUser(NombreUsuario.Text, ContraseñaUsuario.Text, usuarios[i]))
             {
-                await Navigation.PushAsync(new MainPage(usuarios[i]));
+                Usuario usuarioRegistrado = usuarios[i];
+                Rol rolUsuario = RolesRepositorio.ObtenerRolPorId(usuarios[i].RolId);
+                if (rolUsuario != null)
+                {
+                    usuarioRegistrado.Rol = rolUsuario;
+                    usuarioRegistrado.Rol.Nombre = rolUsuario.Nombre;
+                }
+                await Navigation.PushAsync(new MainPage(usuarioRegistrado));
                 okLogin = true;
             }
             else MensajeError.Text = " Inicio de sesión incorrecto";

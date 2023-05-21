@@ -43,7 +43,7 @@ namespace SugahriStore.Datos
             _dbContext.SaveChanges();
         }
 
-        public void BorrarPedido(int id)
+        public void BorrarPedidoPorId(int id)
         {
             Pedido pedido = _dbContext.Pedidos.FirstOrDefault(p => p.Id == id);
             if (pedido != null)
@@ -52,6 +52,12 @@ namespace SugahriStore.Datos
                 _dbContext.SaveChanges();
             }
         }
+        public void BorrarPedido(Pedido pedido)
+        {
+            _dbContext.Pedidos.Remove(pedido);
+            _dbContext.SaveChanges();
+        }
+
     }
 }
 

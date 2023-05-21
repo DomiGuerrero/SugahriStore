@@ -48,16 +48,15 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="fondo1.jpg" Aspect="AspectFill" Opacity="0.5" />
             <StackLayout Grid.Column="1"  HorizontalOptions="Center">
-                <Label Text="Importar/Exportar archivo" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" />
+                <Label Text="Importar/Exportar Pedidos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" />
 
                 <!-- Importar archivo -->
-                <Button Text="Importar archivo" Clicked="OnImportFileClicked" Margin="0,0,0,20" />
+                <Button Text="Importar Pedidos" Clicked="OnImportFileClicked" Margin="0,0,0,20" />
 
                 <!-- Exportar archivo -->
                 <StackLayout>
-                    <Label Text="Exportar archivo:" FontSize="Medium" FontAttributes="Bold" Margin="0,0,0,10" />
+                    <Label Text="Exportar pedidos:" FontSize="Medium" FontAttributes="Bold" Margin="0,0,0,10" />
                     <Entry x:Name="filenameEntry" Placeholder="Nombre del archivo" Margin="0,0,0,10" />
                     <Button Text="Exportar" Clicked="OnExportFileClicked" />
                 </StackLayout>

@@ -45,6 +45,8 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BindingContext = this;
         Usuario = usuario;
+        NombreProeba.Text = "Nombre: " + usuario.Nombre;
+        RolName.Text = "Rol: " + usuario.Rol.Nombre;
         LogicaViews.StartTimer(carouselView,Images);
     }
 

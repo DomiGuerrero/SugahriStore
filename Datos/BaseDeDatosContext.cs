@@ -6,8 +6,7 @@ namespace SugahriStore.ManejoDatos
 {
     public class BaseDeDatosContext : DbContext
     {
-        static readonly string Database = "dbSqlite.db";
-        string ejemplo;
+        static readonly string DatabaseName = "dbSqlite.db";
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
@@ -17,7 +16,7 @@ namespace SugahriStore.ManejoDatos
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString: "Filename=" + Database,
+            optionsBuilder.UseSqlite(connectionString: "Filename=" + DatabaseName,
                 sqliteOptionsAction: op =>
                 {
                     op.MigrationsAssembly(
@@ -50,6 +49,10 @@ namespace SugahriStore.ManejoDatos
             });
 
             modelBuilder.Entity<Auditoria>().ToTable("Auditorias");
+            modelBuilder.Entity<Auditoria>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
 
             modelBuilder.Entity<Rol>().ToTable("Roles")
                 .HasMany(r => r.Usuarios)
@@ -57,6 +60,10 @@ namespace SugahriStore.ManejoDatos
                 .HasForeignKey(u => u.RolId);
 
             base.OnModelCreating(modelBuilder);
+        }
+        public void CrearBaseDeDatos()
+        {
+            Database.EnsureCreated();
         }
 
     }

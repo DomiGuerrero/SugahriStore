@@ -8,7 +8,7 @@ namespace SugahriStore.Modelos
 {
     public class Auditoria
     {
-        private int Id { get; set; }
+        public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public string NombrePedido { get; set; }
 

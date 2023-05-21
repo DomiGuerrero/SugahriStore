@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Prototipo_1_SugahriStore.Modelos;
+using SugahriStore.Modelos;
 using System.Reflection;
 
-namespace Prototipo_1_SugahriStore.ManejoDatos
+namespace SugahriStore.ManejoDatos
 {
     public class BaseDeDatosContext : DbContext
     {

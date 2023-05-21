@@ -1,4 +1,4 @@
-﻿namespace Prototipo_1_SugahriStore.Modelos
+﻿namespace SugahriStore.Modelos
 {
     public class LineaPedido
     {

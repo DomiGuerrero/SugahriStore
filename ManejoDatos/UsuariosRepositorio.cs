@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Prototipo_1_SugahriStore.Modelos;
+using SugahriStore.Modelos;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Prototipo_1_SugahriStore.ManejoDatos
+namespace SugahriStore.ManejoDatos
 {
     public class UsuariosRepositorio
     {

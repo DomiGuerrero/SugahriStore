@@ -1,9 +1,9 @@
-﻿using Prototipo_1_SugahriStore.Modelos;
+﻿using SugahriStore.Modelos;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using static System.Net.WebRequestMethods;
 
-namespace Prototipo_1_SugahriStore.Lógica.DatosCSV;
+namespace SugahriStore.Lógica.DatosCSV;
 
 //Generaremos la lista de productos del CSV extraido de la tienda 
 public static class CsvManagement

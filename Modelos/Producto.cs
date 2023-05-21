@@ -1,8 +1,7 @@
-﻿
-using System.Net;
-using Prototipo_1_SugahriStore.Lógica;
+﻿using System.Net;
+using SugahriStore.Lógica;
 
-namespace Prototipo_1_SugahriStore.Modelos;
+namespace SugahriStore.Modelos;
 public class Producto
 {
     public int Id { get; set; }

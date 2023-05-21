@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prototipo_1_SugahriStore.Lógica
+namespace SugahriStore.Lógica
 {
     public static class LogicaViews
     {

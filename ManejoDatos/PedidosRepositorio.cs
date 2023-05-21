@@ -1,11 +1,11 @@
-﻿using Prototipo_1_SugahriStore.Modelos;
+﻿using SugahriStore.Modelos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prototipo_1_SugahriStore.ManejoDatos
+namespace SugahriStore.ManejoDatos
 {
     public class PedidosRepositorio
     {

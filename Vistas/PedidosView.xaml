@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SugahriStore.PedidosView">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="#FFF2F6"
+                         Margin="0,0,0,10"
+                         Padding="5">
+                <Button Text="Volver"
+                        BackgroundColor="#ffb7c5"
+                        CornerRadius="0"
+                        Padding="15,25,10,25"
+                        Clicked="Regresar"
+                        FontFamily="Montserrat"
+                        FontSize="Medium"
+                        TextColor="White"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start" />
+                <SearchBar x:Name="SearchBar"
+                           TextChanged="CambioDeTexto"
+                           Placeholder="Buscar"
+                           PlaceholderColor="#999999"
+                           TextColor="#1D3557"
+                           FontFamily="Montserrat"
+                           FontSize="Medium"
+                           VerticalOptions="StartAndExpand"
+                           HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+            <ListView ItemsSource="{Binding Path=Pedidos}"
+                      Margin="10"
+                      SeparatorColor="#FFF2F6"
+                      SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10"
+                                  BackgroundColor="#FFFFFF"
+                                  Margin="-10,-10,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label Text="{Binding Nombre}"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="16"
+                                       TextColor="#1D3557" />
+                                <Label Text="{Binding Estado}"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="14"
+                                       TextColor="#457B9D" />
+                                <Label Text="{Binding Divisa}"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="14"
+                                       TextColor="#457B9D" />
+                                <Label Text="{Binding Total}"
+                                       Grid.Row="3"
+                                       Grid.Column="0"
+                                       FontSize="14"
+                                       TextColor="#457B9D" />
+                                <Button Text="Detalles"
+                                        BackgroundColor="#FFC4D6"
+                                        TextColor="White"
+                                        CornerRadius="5"
+                                        Padding="10,5"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        Command="{Binding Source={x:Reference page}, Path=BindingContext.VerDetallesCommand}"
+                                        CommandParameter="{Binding .}" 
+                                        Clicked="DetallePedido"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

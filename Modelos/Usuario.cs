@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace Prototipo_1_SugahriStore.Modelos
+namespace SugahriStore.Modelos
 {
     public class Usuario
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Prototipo_1_SugahriStore.Modelos;
+using SugahriStore.Modelos;
 
-namespace Prototipo_1_SugahriStore.ManejoDatos
+namespace SugahriStore.ManejoDatos
 {
     public class ProductosRepositorio
     {

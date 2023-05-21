@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SugahriStore.DetallePedido">
+    <ContentPage.Resources>
+        <Color x:Key="MainColor">#E87191</Color>
+        <Color x:Key="AccentColor">#FFC4D6</Color>
+        <Color x:Key="TextColor">#FFC4D6</Color>
+        <Color x:Key="BackgroundColor">#FFFFFF</Color>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="TextColor" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="BackgroundColor" Value="{StaticResource MainColor}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="15" />
+        </Style>
+        <Style TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HasShadow" Value="True" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Padding="20" BackgroundColor="{StaticResource BackgroundColor}">
+            <Label Text="Información del Pedido" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}"/>
+            <Frame CornerRadius="10" HasShadow="True">
+                <StackLayout Padding="20">
+                    <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                    <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20"/>
+                    <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                    <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20"/>
+                    <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                    <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20"/>
+                    <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
+                    <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20"/>
+                </StackLayout>
+            </Frame>
+            <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding GuardarPedidoCommand}"/>
+            <Button Text="Ver Productos" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding VerPedidoCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

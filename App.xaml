@@ -1,10 +1,14 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:SugahriStore"
+             xmlns:local="clr-namespace:Prototipo_1_SugahriStore"
              x:Class="SugahriStore.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Style TargetType="ContentPage">
+                <Setter Property="MinimumWidthRequest" Value="900"/>
+                <Setter Property="MinimumHeightRequest" Value="600"/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
@@ -12,3 +16,4 @@
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+

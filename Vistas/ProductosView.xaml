@@ -1,0 +1,96 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SugahriStore.ProductosView">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         BackgroundColor="#FFF2F6"
+                         Margin="0,0,0,10"
+                         Padding="5">
+                <Button Text="Volver"
+                        BackgroundColor="#ffb7c5"
+                        CornerRadius="0"
+                        Padding="15,25,10,25"
+                        Clicked="Regresar"
+                        FontFamily="Montserrat"
+                        FontSize="Medium"
+                        TextColor="White"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start" />
+                <SearchBar x:Name="SearchBar"
+                           Placeholder="Buscar:"
+                           PlaceholderColor="#999999"
+                           TextColor="#1D3557"
+                           FontFamily="Montserrat"
+                           FontSize="Medium"
+                           VerticalOptions="StartAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           TextChanged="CambioDeTexto" />
+            </StackLayout>
+            <ListView ItemsSource="{Binding Path=Productos}"
+                      Margin="10"
+                      SeparatorColor="#FFF2F6"
+                      SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10"
+                                  BackgroundColor="#FFFFFF"
+                                  Margin="-10,-10,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding ImageUrl, FallbackValue='placeholder.jpg'}" 
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Aspect="AspectFit"
+                                       HeightRequest="150"
+                                       WidthRequest="150" />
+                                <StackLayout Grid.Row="0"
+                                             Grid.Column="1"
+                                             Orientation="Vertical"
+                                             HorizontalOptions="StartAndExpand"
+                                             VerticalOptions="CenterAndExpand"
+                                             Margin="10,0,0,0">
+                                    <Label Text="{Binding Nombre}"
+                                           FontSize="16"
+                                           TextColor="#1D3557" />
+                                    <Label Text="Inventario:"
+                                           FontSize="14"
+                                           TextColor="#457B9D" />
+                                    <Label Text="{Binding Inventario}"
+                                           FontSize="14"
+                                           TextColor="#457B9D" />
+                                    <Label Text="Coste:"
+                                           FontSize="14"
+                                           TextColor="#457B9D" />
+                                    <Label Text="{Binding Coste, StringFormat='{0:C}'}"
+                                           FontSize="14"
+                                           TextColor="#457B9D" />
+                                </StackLayout>
+                                <Button Text="Detalles"
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        BackgroundColor="#ffb7c5"
+                                        CornerRadius="0"
+                                        Padding="15,25,10,25"
+                                        Clicked="Detalles_Clicked"
+                                        FontFamily="Montserrat"
+                                        FontSize="Medium"
+                                        TextColor="White"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="End" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+

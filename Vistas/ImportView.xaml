@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SugahriStore.Vistas.ImportView"
+             Title="ImportView">
+    <ContentPage.Resources>
+        <Color x:Key="MainColor">#E87191</Color>
+        <Color x:Key="AccentColor">#FFC4D6</Color>
+        <Color x:Key="TextColor">#FFC4D6</Color>
+        <Color x:Key="BackgroundColor">#FFFFFF</Color>
+        <Color x:Key="PinkColor">#F6BDC0</Color>
+        <Color x:Key="LightPinkColor">#FADBD8</Color>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="TextColor" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="BackgroundColor" Value="{StaticResource PinkColor}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="15" />
+        </Style>
+        <Style TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HasShadow" Value="True" />
+        </Style>
+        <Style TargetType="Image">
+            <Setter Property="WidthRequest" Value="100"/>
+            <Setter Property="HeightRequest" Value="100"/>
+            <Setter Property="Aspect" Value="AspectFill"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="fondo1.jpg" Aspect="AspectFill" Opacity="0.5" />
+            <StackLayout Grid.Column="1"  HorizontalOptions="Center">
+                <Label Text="Importar/Exportar archivo" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" />
+
+                <!-- Importar archivo -->
+                <Button Text="Importar archivo" Clicked="OnImportFileClicked" Margin="0,0,0,20" />
+
+                <!-- Exportar archivo -->
+                <StackLayout>
+                    <Label Text="Exportar archivo:" FontSize="Medium" FontAttributes="Bold" Margin="0,0,0,10" />
+                    <Entry x:Name="filenameEntry" Placeholder="Nombre del archivo" Margin="0,0,0,10" />
+                    <Button Text="Exportar" Clicked="OnExportFileClicked" />
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

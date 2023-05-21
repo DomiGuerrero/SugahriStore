@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SugahriStore.ManejoDatos;
+using SugahriStore.Datos;
 using SugahriStore.Modelos;
 using SugahriStore.Lógica;
 using SugahriStore.Lógica.DatosCSV;
@@ -10,12 +10,13 @@ public partial class LoginView : ContentPage
 {
     readonly Login login = new();
     readonly List<Usuario> usuarios;
+    private List<Usuario> lista;
+    UsuariosRepositorio UsuariosRepositorio  = new UsuariosRepositorio();
 
     public LoginView()
     {
         InitializeComponent();
-        usuarios = CsvManagement.DeserializarUsuarios();
-        _ = new BaseDeDatosContext();
+        usuarios = UsuariosRepositorio.ObtenerUsuarios();
     }
 
     public async void Login(object sender, EventArgs e)

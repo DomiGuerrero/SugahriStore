@@ -3,7 +3,7 @@ using SugahriStore.Modelos;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SugahriStore.ManejoDatos
+namespace SugahriStore.Datos
 {
     public class UsuariosRepositorio
     {
@@ -16,12 +16,17 @@ namespace SugahriStore.ManejoDatos
         }
 
         // Método para agregar un usuario a la tabla Usuarios
-        public void AgregarUsuario(Usuario usuario, string password)
+        public void AgregarUsuario(Usuario usuario)
         {
             // Se hashea la contraseña antes de guardarla en la base de datos
-            usuario.Contraseña = UsuariosRepositorio.HashContraseña(password);
+            usuario.Contraseña = UsuariosRepositorio.HashContraseña(usuario.Contraseña);
             context.Usuarios.Add(usuario);
             context.SaveChanges();
+        }
+
+        public List<Usuario> ObtenerUsuarios()
+        {
+            return context.Usuarios.ToList();
         }
 
         // Método para obtener un usuario por su id

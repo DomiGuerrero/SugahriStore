@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SugahriStore.Modelos;
 
-namespace SugahriStore.ManejoDatos
+namespace SugahriStore.Datos
 {
     public class ProductosRepositorio
     {

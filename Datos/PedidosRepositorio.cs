@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SugahriStore.ManejoDatos
+namespace SugahriStore.Datos
 {
     public class PedidosRepositorio
     {

@@ -2,7 +2,7 @@
 using SugahriStore.Modelos;
 using System.Reflection;
 
-namespace SugahriStore.ManejoDatos
+namespace SugahriStore.Datos
 {
     public class BaseDeDatosContext : DbContext
     {
@@ -16,12 +16,14 @@ namespace SugahriStore.ManejoDatos
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString: "Filename=" + DatabaseName,
+            
+            optionsBuilder.UseSqlite(connectionString: "Filename=C:\\databases\\" + DatabaseName,
                 sqliteOptionsAction: op =>
                 {
                     op.MigrationsAssembly(
                         Assembly.GetExecutingAssembly().FullName
                         );
+                   
                 });
 
             base.OnConfiguring(optionsBuilder);

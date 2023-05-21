@@ -11,14 +11,19 @@ namespace SugahriStore.Datos
     {
         private readonly BaseDeDatosContext _dbContext;
 
-        public PedidosRepositorio(BaseDeDatosContext dbContext)
+        public PedidosRepositorio()
         {
-            _dbContext = dbContext;
+            _dbContext = new BaseDeDatosContext();
         }
 
         public void InsertarPedido(Pedido pedido)
         {
             _dbContext.Pedidos.Add(pedido);
+            _dbContext.SaveChanges();
+        }
+        public void InsertarPedidos(List<Pedido> pedidos)
+        {
+            _dbContext.Pedidos.AddRange(pedidos);
             _dbContext.SaveChanges();
         }
 

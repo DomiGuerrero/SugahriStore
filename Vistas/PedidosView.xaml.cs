@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using SugahriStore.Lógica.DatosCSV;
+using SugahriStore.Datos;
 
 namespace SugahriStore
 {
@@ -15,6 +16,7 @@ namespace SugahriStore
         public MainPage MainPageView;
         private List<Pedido> _pedidos;
         private List<Pedido> _pedidosFiltrados;
+        PedidosRepositorio PedidosRepositorio = new PedidosRepositorio();
         DetallePedido detallePage;
         public List<Pedido> Pedidos
         {
@@ -28,7 +30,7 @@ namespace SugahriStore
         public PedidosView(Usuario usuario, MainPage mainPage )
         {
             InitializeComponent();
-            _pedidos = CsvManagement.DeserializarPedidos();
+            _pedidos = PedidosRepositorio.ObtenerPedidos();
             _pedidosFiltrados = _pedidos;
             MainPageView = mainPage;
             BindingContext = this;

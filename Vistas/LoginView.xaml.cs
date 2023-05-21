@@ -10,8 +10,7 @@ public partial class LoginView : ContentPage
 {
     readonly Login login = new();
     readonly List<Usuario> usuarios;
-    private List<Usuario> lista;
-    UsuariosRepositorio UsuariosRepositorio  = new UsuariosRepositorio();
+    UsuariosRepositorio UsuariosRepositorio  = new();
 
     public LoginView()
     {

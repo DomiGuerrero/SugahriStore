@@ -40,19 +40,21 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
+            <Image Source="fondo2.jpg" Aspect="AspectFill" />
+
             <ScrollView Grid.Column="0">
                 <StackLayout Padding="20">
                     <Label Text="Información del Pedido" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}"/>
-                    <Frame CornerRadius="10" HasShadow="True">
+                    <Frame CornerRadius="10" HasShadow="True" Margin="0,10">
                         <StackLayout Padding="20">
-                            <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                            <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20"/>
-                            <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                            <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20"/>
-                            <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                            <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20"/>
-                            <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}"/>
-                            <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20"/>
+                            <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                            <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                            <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                            <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                            <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20" />
                         </StackLayout>
                     </Frame>
                     <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding GuardarPedidoCommand}"/>
@@ -60,29 +62,33 @@
                 </StackLayout>
             </ScrollView>
 
-            <ScrollView Grid.Column="1">
-                <StackLayout Padding="20">
-                    <!-- Aquí puedes iterar sobre la lista de LineasPedido y mostrar la información de cada línea -->
-                    <Label Text="Articulos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,20" TextColor="{StaticResource TextColor}" />
+            <ScrollView Grid.Column="1" Margin="20">
 
-                    <!-- Aquí debes iterar sobre la lista de LineasPedido y mostrar la información de cada línea -->
-                    <ListView ItemsSource="{Binding LineasPedido}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout>
-                                        <!-- Aquí debes mostrar los detalles de cada línea de pedido -->
-                                        <Label Text="{Binding Nombre}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                                        <Label Text="{Binding Precio}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                                        <Label Text="{Binding Cantidad}" FontSize="Medium" Margin="0,0,0,20" TextColor="{StaticResource TextColor}" />
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackLayout>
+                <Frame CornerRadius="10" HasShadow="True" Margin="0,10">
+                    <StackLayout Spacing="20">
+                        <Label Text="Articulos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="{StaticResource TextColor}" />
+                        <StackLayout Padding="20">
+                            <Label x:Name="NoLineasPedidoLabel" Text="No hay líneas de pedido" FontSize="Medium" HorizontalTextAlignment="Center" TextColor="{StaticResource TextColor}" />
+                        </StackLayout>
+                        <ListView x:Name="LineasPedidoListView" ItemsSource="{Binding LineasPedido}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" Margin="0,5,0,0">
+                                            <BoxView WidthRequest="5" BackgroundColor="Gray" VerticalOptions="Fill" />
+                                            <StackLayout Padding="10,0,0,0">
+                                                <Label Text="{Binding Nombre}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                                                <Label Text="{Binding Precio}" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
+                                                <Label Text="{Binding Cantidad}" FontSize="Medium" Margin="0,0,0,0" TextColor="{StaticResource TextColor}" />
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </Frame>
             </ScrollView>
         </Grid>
     </ContentPage.Content>
-
 </ContentPage>

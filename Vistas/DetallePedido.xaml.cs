@@ -1,80 +1,61 @@
 ﻿using SugahriStore.Modelos;
+using SugahriStore.Repositorios;
+using System.Collections.ObjectModel;
 
-namespace SugahriStore;
-public partial class DetallePedido : ContentPage
+namespace SugahriStore
 {
-    private readonly Pedido _pedido;
-    public string NombrePedido => _pedido.Nombre;
-    public string Estado => _pedido.Estado;
-    public string Divisa => _pedido.Divisa;
-    public decimal PrecioTotal => _pedido.Total;
-
-    private ListView LineasPedidoListView;
-
-    public DetallePedido(Pedido pedido)
+    public partial class DetallePedido : ContentPage
     {
-        InitializeComponent();
-        _pedido = pedido;
-        BindingContext = this;
+        private readonly Pedido _pedido;
 
-        // Configurar el ListView con las líneas de pedido
-        LineasPedidoListView = new ListView
+        public LineaPedidoRepositorio LineaPedidoRepositorio = new();
+        public string NombrePedido => _pedido.Nombre;
+        public string Estado => _pedido.Estado;
+        public string Divisa => _pedido.Divisa;
+        public decimal PrecioTotal => _pedido.Total;
+
+        public ObservableCollection<LineaPedido> LineasPedido { get; set; } = new ObservableCollection<LineaPedido>();
+
+        public DetallePedido(Pedido pedido)
         {
-            ItemsSource = _pedido.LineasPedido,
-            ItemTemplate = new DataTemplate(() =>
+            InitializeComponent();
+
+            _pedido = pedido;
+            _pedido.LineasPedido = this.LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
+
+            BindingContext = this;
+
+            // Agregar las líneas de pedido al ObservableCollection
+            if (_pedido.LineasPedido != null)
             {
-                var nameLabel = new Label();
-                nameLabel.SetBinding(Label.TextProperty, "Nombre");
-                var priceLabel = new Label();
-                priceLabel.SetBinding(Label.TextProperty, "Precio");
-                var quantityLabel = new Label();
-                quantityLabel.SetBinding(Label.TextProperty, "Cantidad");
-
-                var viewCell = new ViewCell
+                foreach (var linea in _pedido.LineasPedido)
                 {
-                    View = new StackLayout
-                    {
-                        Children = { nameLabel, priceLabel, quantityLabel }
-                    }
-                };
+                    LineasPedido.Add(linea);
+                }
+            }
 
-                return viewCell;
-            })
-        };
+            // Verificar si hay líneas de pedido y ajustar la visibilidad de la etiqueta y la lista
+            if (LineasPedido.Count > 0)
+            {
+                LineasPedidoListView.IsVisible = true;
+                NoLineasPedidoLabel.IsVisible = false;
+            }
+            else
+            {
+                LineasPedidoListView.IsVisible = false;
+                NoLineasPedidoLabel.IsVisible = true;
+            }
+        }
 
-        // Crear el ScrollView para el ListView de líneas de pedido
-        var scrollView = new ScrollView
+
+        private void GuardarPedidoCommand(object sender, EventArgs e)
         {
-            Content = LineasPedidoListView
-        };
+            // Código para guardar el pedido
+        }
 
-        // Agregar el ScrollView al StackLayout principal
-        //StackLayout.Children.Add(scrollView);
-    }
-
-    private void GuardarPedidoCommand(object sender, EventArgs e)
-    {
-       
-    }
-
-    private void VerPedidoCommand(object sender, EventArgs e)
-    {
-        
-    }
-
-    private void OnCounterClicked(object sender, EventArgs e)
-    {
-        
-    }
-
-    private void Regresar(object sender, EventArgs e)
-    {
-        
-    }
-
-    private void CambioDeTexto(object sender, EventArgs e)
-    {
-        // Código para actualizar el pedido cuando se cambia la cantidad de unidades del producto
+        private void VerPedidoCommand(object sender, EventArgs e)
+        {
+            // Código para ver los detalles del pedido
+        }
     }
 }
-

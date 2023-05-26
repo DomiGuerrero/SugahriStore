@@ -1,4 +1,5 @@
 ﻿using SugahriStore.Modelos;
+using SugahriStore.Repositorios;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using static System.Net.WebRequestMethods;
@@ -8,11 +9,11 @@ namespace SugahriStore.Lógica.DatosCSV;
 //Generaremos la lista de productos del CSV extraido de la tienda 
 public static class CsvManagement
 {
-    private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
+    //private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
     private static readonly string rutaUsuarios = Path.Combine(AppContext.BaseDirectory, "Resources", "Users\\Usuarios.csv");
     private static readonly string rutaProductos = Path.Combine(AppContext.BaseDirectory, "Resources", "Productos\\Productos.csv");
     private static readonly string rutaPlaceholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
-
+    private static LineaPedidoRepositorio LineaPedidoRepositorio = new LineaPedidoRepositorio();
     public static List<Producto> DeserializarProductos()
     {
         List<Producto> productos = new();
@@ -88,56 +89,6 @@ public static class CsvManagement
         return usuarios;
     }
 
-    public static List<Pedido> DeserializarPedidos()
-    {
-        List<Pedido> pedidos = new();
-        Dictionary<string, Pedido> dictPedidos = new();
-
-        using (var reader = new StreamReader(rutaPedidos))
-        {
-            string[] headers = reader.ReadLine().Split(','); // Leemos la cabecera del archivo
-            int nombreIndex = Array.IndexOf(headers, "Name");
-            int emailIndex = Array.IndexOf(headers, "Email");
-            int estadoFinancieroIndex = Array.IndexOf(headers, "Financial Status");
-            int estadoEnvioIndex = Array.IndexOf(headers, "Fulfillment Status");
-            int monedaIndex = Array.IndexOf(headers, "Currency");
-            int totalIndex = Array.IndexOf(headers, "Total");
-            int lineaNombreIndex = Array.IndexOf(headers, "Lineitem name");
-            int lineaPrecioIndex = Array.IndexOf(headers, "Lineitem price");
-            int lineaCantidadIndex = Array.IndexOf(headers, "Lineitem quantity");
-
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string[] fields = line.Split(',');
-                string nombre = fields[nombreIndex];
-                if (!dictPedidos.ContainsKey(nombre))
-                {
-                    Pedido pedido = new()
-                    {
-                        Nombre = nombre,
-                        Email = fields[emailIndex],
-                        Estado = fields[estadoFinancieroIndex],
-                        EstadoDeEnvio = fields[estadoEnvioIndex],
-                        Divisa = fields[monedaIndex],
-                        Total = decimal.Parse(fields[totalIndex], new CultureInfo("en-US")),
-                        LineasPedido = new List<LineaPedido>()
-                    };
-                    dictPedidos.Add(nombre, pedido);
-                    pedidos.Add(pedido);
-                }
-                LineaPedido lineaPedido = new()
-                {
-                    Nombre = fields[lineaNombreIndex],
-                    Precio = decimal.Parse(fields[lineaPrecioIndex], new CultureInfo("en-US")),
-                    Cantidad = int.Parse(fields[lineaCantidadIndex])
-                };
-                dictPedidos[nombre].LineasPedido.Add(lineaPedido);
-            }
-        }
-        return pedidos;
-    }
-
     public static void SerializarPedidos(List<Pedido> pedidos, string rutaArchivo)
     {
         using (var writer = new StreamWriter(rutaArchivo))
@@ -147,18 +98,100 @@ public static class CsvManagement
 
             foreach (var pedido in pedidos)
             {
-                foreach (var lineaPedido in pedido.LineasPedido)
+
+                var lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
+
+                if (lineasPedido.Any())
                 {
-                    // Escribir los campos de cada línea de pedido
-                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},{lineaPedido.Nombre},{lineaPedido.Precio},{lineaPedido.Cantidad}");
+                    foreach (var lineaPedido in lineasPedido)
+                    {
+                        // Escribir los campos de cada línea de pedido
+                        writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},{lineaPedido.Nombre},{lineaPedido.Precio},{lineaPedido.Cantidad}");
+                    }
+                }
+                else
+                {
+                    // Si no hay líneas de pedido, escribir una fila con campos vacíos
+                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},,,");
                 }
             }
         }
+
+    }
+
+    public static List<Pedido> DeserializarPedidos(string rutaArchivo)
+    {
+        List<Pedido> pedidos = new List<Pedido>();
+
+        using (var reader = new StreamReader(rutaArchivo))
+        {
+            // Leer la cabecera del archivo
+            string cabecera = reader.ReadLine();
+
+            if (cabecera == "Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity")
+            {
+                while (!reader.EndOfStream)
+                {
+                    // Leer cada línea del archivo CSV
+                    string linea = reader.ReadLine();
+                    string[] campos = linea.Split(',');
+
+                    if (campos.Length == 9)
+                    {
+                        // Crear un nuevo pedido y asignar los valores de los campos
+                        Pedido pedido = new Pedido
+                        {
+                            Nombre = campos[0],
+                            Email = campos[1],
+                            Estado = campos[2],
+                            EstadoDeEnvio = campos[3],
+                            Divisa = campos[4],
+                            Total = decimal.Parse(campos[5]),
+                            LineasPedido = new List<LineaPedido>()
+                        };
+
+                        // Crear una nueva línea de pedido y asignar los valores de los campos
+                        LineaPedido lineaPedido = new LineaPedido
+                        {
+                            Nombre = campos[6],
+                            Precio = decimal.Parse(campos[7]),
+                            Cantidad = int.Parse(campos[8])
+                        };
+
+                        // Verificar si el valor en campos[7] es un número decimal válido
+                        if (decimal.TryParse(campos[7], out decimal precio))
+                        {
+                            lineaPedido.Precio = precio;
+
+                            // Agregar la línea de pedido al pedido correspondiente
+                            pedido.LineasPedido.Add(lineaPedido);
+
+                            // Agregar el pedido a la lista de pedidos
+                            pedidos.Add(pedido);
+                        }
+                        else
+                        {
+                            // El valor en campos[7] no es un número decimal válido, realizar el manejo de error correspondiente
+                            Console.WriteLine($"Error: El valor en campos[7] no es un número decimal válido. Valor: {campos[7]}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // La cabecera del archivo no coincide, realizar el manejo de error correspondiente
+                Console.WriteLine("Error: La cabecera del archivo CSV no es válida");
+            }
+        }
+
+        return pedidos;
     }
 
 
 
 }
+
+
 
 
 

@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Storage;
 using SugahriStore.Datos;
 using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Modelos;
@@ -31,17 +32,9 @@ namespace SugahriStore.Vistas
 
         private async void OnExportFileClicked(object sender, EventArgs e)
         {
-            // Lógica para seleccionar ubicación de exportación
-            var fileResult = await FilePicker.PickAsync();
+            var folder = await FolderPicker.PickAsync(default);
 
-            if (fileResult != null)
-            {
-                // Obtener la ruta de la ubicación de exportación seleccionada
-                string filePath = fileResult.FullPath;
-
-                // Mostrar la ruta de exportación en el label
-                exportFilePathLabel.Text = filePath;
-            }
+            exportFilePathLabel.Text = $"{folder.Folder.Path}";
         }
 
 
@@ -56,8 +49,8 @@ namespace SugahriStore.Vistas
                 // Validar si se ha proporcionado un nombre de archivo
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    // Combinar la ubicación de exportación y el nombre de archivo para obtener la ruta completa del archivo
-                    string filePath = Path.Combine(exportFilePathLabel.Text, fileName);
+                    // Cambiar la extensión del archivo a ".csv"
+                    string filePath = Path.ChangeExtension(Path.Combine(exportFilePathLabel.Text, fileName), "csv");
 
                     List<Pedido> pedidos = this.PedidosRepositorio.ObtenerPedidos();
 
@@ -66,6 +59,7 @@ namespace SugahriStore.Vistas
 
                     // Mostrar un mensaje de éxito
                     DisplayAlert("Éxito", "Archivo exportado correctamente", "Aceptar");
+
                 }
                 else
                 {
@@ -78,9 +72,8 @@ namespace SugahriStore.Vistas
                 // Mostrar un mensaje de error si no se ha seleccionado una ubicación de exportación
                 DisplayAlert("Error", "Por favor, selecciona una ubicación de exportación", "Aceptar");
             }
-
-
         }
+
         private void OnImportClicked(object sender, EventArgs e)
         {
             // Validar si se ha seleccionado un archivo para importar
@@ -89,10 +82,11 @@ namespace SugahriStore.Vistas
                 // Obtener la ruta del archivo importado
                 string filePath = importFilePathLabel.Text;
 
-                // Realizar la lógica de importación utilizando la ruta del archivo
+                List<Pedido> pedidos = CsvManagement.DeserializarPedidos(filePath);
+                this.PedidosRepositorio.InsertarPedidos(pedidos);
 
-                // Mostrar un mensaje de éxito
-                DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+                 // Mostrar un mensaje de éxito
+                 DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
             }
             else
             {

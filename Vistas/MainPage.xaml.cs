@@ -39,7 +39,7 @@ public partial class MainPage : ContentPage
     }
     private int currentIndex = 0;
 
- 
+
     public MainPage(Usuario usuario)
     {
         InitializeComponent();
@@ -47,22 +47,22 @@ public partial class MainPage : ContentPage
         Usuario = usuario;
         NombreProeba.Text = "Nombre: " + usuario.Nombre;
         RolName.Text = "Rol: " + usuario.Rol.Nombre;
-        LogicaViews.StartTimer(carouselView,Images);
+        LogicaViews.StartTimer(carouselView, Images);
     }
 
     private void Button1_Clicked(object sender, EventArgs e)
     {
-        pedidosView = new PedidosView(this.Usuario,this);
-        Navigation.PushAsync(pedidosView);  
+        pedidosView = new PedidosView(this.Usuario, this);
+        Navigation.PushAsync(pedidosView);
     }
     private void Button2_Clicked(object sender, EventArgs e)
     {
-        ImportView = new ImportView(this);
+        ImportView = new ImportView();
         Navigation.PushAsync(ImportView);
     }
     private void Button3_Clicked(object sender, EventArgs e)
     {
-        
+
     }
     private void Button4_Clicked(object sender, EventArgs e)
     {
@@ -72,12 +72,12 @@ public partial class MainPage : ContentPage
     }
     private void Button5_Clicked(object sender, EventArgs e)
     {
-        ProductosView = new ProductosView( this);
+        ProductosView = new ProductosView(this);
         Navigation.PushAsync(ProductosView);
     }
     private void Button6_Clicked(object sender, EventArgs e)
     {
-      App.Current.Quit();
+        App.Current.Quit();
     }
 
     private void PreviousButton_Clicked(object sender, EventArgs e)

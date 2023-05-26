@@ -1,69 +1,99 @@
-namespace SugahriStore.Vistas;
+using System;
+using System.IO;
 
-public partial class ImportView : ContentPage
+namespace SugahriStore.Vistas
 {
-	public ImportView(MainPage mainPage)
-	{
-		InitializeComponent();
-	}
-
-    private async void OnImportFileClicked(object sender, EventArgs e)
+    public partial class ImportView : ContentPage
     {
-        try
+        public ImportView()
         {
-            FileResult result = await FilePicker.PickAsync();
+            InitializeComponent();
+        }
 
-            if (result != null)
+        private async void OnImportFileClicked(object sender, EventArgs e)
+        {
+            // Lógica para seleccionar archivo de importación
+            var fileResult = await FilePicker.PickAsync();
+
+            if (fileResult != null)
             {
-                Stream stream = await result.OpenReadAsync();
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    // Leer archivo y hacer algo con los datos
-                }
+                // Obtener la ruta del archivo seleccionado
+                string filePath = fileResult.FullPath;
+
+                // Mostrar la ruta del archivo importado en el label
+                importFilePathLabel.Text = filePath;
             }
         }
-        catch (Exception ex)
-        {
-            // Manejar excepción
-        }
-    }
 
-    private async void OnExportFileClicked(object sender, EventArgs e)
-    {
-        try
+        private async void OnExportFileClicked(object sender, EventArgs e)
         {
-            FileResult result = await FilePicker.PickAsync();
+            // Lógica para seleccionar ubicación de exportación
+            var fileResult = await FilePicker.PickAsync();
 
-            if (result != null)
+            if (fileResult != null)
             {
-                string filename = filenameEntry.Text;
-                if (string.IsNullOrEmpty(filename))
-                {
-                    filename = "file";
-                }
+                // Obtener la ruta de la ubicación de exportación seleccionada
+                string filePath = fileResult.FullPath;
 
-                string extension = Path.GetExtension(result.FullPath);
-                if (string.IsNullOrEmpty(extension))
-                {
-                    extension = ".csv"; // Cambiar por la extensión que necesites
-                }
-
-                string filepath = Path.Combine(result.FullPath, $"{filename}{extension}");
-
-                using (StreamWriter writer = new StreamWriter(filepath))
-                {
-                    // Escribir datos en el archivo
-                }
-
-                await Launcher.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(filepath)
-                });
+                // Mostrar la ruta de exportación en el label
+                exportFilePathLabel.Text = filePath;
             }
         }
-        catch (Exception ex)
+
+
+        private void OnExportClicked(object sender, EventArgs e)
         {
-            // Manejar excepción
+            // Validar si se ha seleccionado una ubicación de exportación
+            if (!string.IsNullOrEmpty(exportFilePathLabel.Text))
+            {
+                // Obtener el nombre del archivo desde el Entry
+                string fileName = filenameEntry.Text;
+
+                // Validar si se ha proporcionado un nombre de archivo
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    // Combinar la ubicación de exportación y el nombre de archivo para obtener la ruta completa del archivo
+                    string filePath = Path.Combine(exportFilePathLabel.Text, fileName);
+
+                    // Realizar la lógica de exportación, por ejemplo, guardar los datos en el archivo especificado
+
+                    // Mostrar un mensaje de éxito
+                    DisplayAlert("Éxito", "Archivo exportado correctamente", "Aceptar");
+                }
+                else
+                {
+                    // Mostrar un mensaje de error si no se ha proporcionado un nombre de archivo
+                    DisplayAlert("Error", "Por favor, ingresa un nombre de archivo", "Aceptar");
+                }
+            }
+            else
+            {
+                // Mostrar un mensaje de error si no se ha seleccionado una ubicación de exportación
+                DisplayAlert("Error", "Por favor, selecciona una ubicación de exportación", "Aceptar");
+            }
+
+
         }
+        private void OnImportClicked(object sender, EventArgs e)
+        {
+            // Validar si se ha seleccionado un archivo para importar
+            if (!string.IsNullOrEmpty(importFilePathLabel.Text))
+            {
+                // Obtener la ruta del archivo importado
+                string filePath = importFilePathLabel.Text;
+
+                // Realizar la lógica de importación utilizando la ruta del archivo
+
+                // Mostrar un mensaje de éxito
+                DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+            }
+            else
+            {
+                // Mostrar un mensaje de error si no se ha seleccionado un archivo para importar
+                DisplayAlert("Error", "Por favor, selecciona un archivo para importar", "Aceptar");
+            }
+        }
+
+
     }
 }

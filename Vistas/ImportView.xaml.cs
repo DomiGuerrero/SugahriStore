@@ -1,3 +1,6 @@
+using SugahriStore.Datos;
+using SugahriStore.Lógica.DatosCSV;
+using SugahriStore.Modelos;
 using System;
 using System.IO;
 
@@ -5,6 +8,7 @@ namespace SugahriStore.Vistas
 {
     public partial class ImportView : ContentPage
     {
+        private PedidosRepositorio PedidosRepositorio = new();
         public ImportView()
         {
             InitializeComponent();
@@ -55,7 +59,10 @@ namespace SugahriStore.Vistas
                     // Combinar la ubicación de exportación y el nombre de archivo para obtener la ruta completa del archivo
                     string filePath = Path.Combine(exportFilePathLabel.Text, fileName);
 
+                    List<Pedido> pedidos = this.PedidosRepositorio.ObtenerPedidos();
+
                     // Realizar la lógica de exportación, por ejemplo, guardar los datos en el archivo especificado
+                    CsvManagement.SerializarPedidos(pedidos, filePath);
 
                     // Mostrar un mensaje de éxito
                     DisplayAlert("Éxito", "Archivo exportado correctamente", "Aceptar");

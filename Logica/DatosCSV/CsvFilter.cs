@@ -15,7 +15,7 @@ public static class CsvManagement
 
     public static List<Producto> DeserializarProductos()
     {
-        List<Producto> productos = new ();
+        List<Producto> productos = new();
 
         using (StreamReader reader = new(rutaProductos))
         {
@@ -137,6 +137,25 @@ public static class CsvManagement
         }
         return pedidos;
     }
+
+    public static void SerializarPedidos(List<Pedido> pedidos, string rutaArchivo)
+    {
+        using (var writer = new StreamWriter(rutaArchivo))
+        {
+            // Escribir la cabecera del archivo
+            writer.WriteLine("Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity");
+
+            foreach (var pedido in pedidos)
+            {
+                foreach (var lineaPedido in pedido.LineasPedido)
+                {
+                    // Escribir los campos de cada línea de pedido
+                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},{lineaPedido.Nombre},{lineaPedido.Precio},{lineaPedido.Cantidad}");
+                }
+            }
+        }
+    }
+
 
 
 }

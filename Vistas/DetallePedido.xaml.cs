@@ -2,6 +2,7 @@
 using SugahriStore.Modelos;
 using SugahriStore.Repositorios;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace SugahriStore
 {
@@ -60,7 +61,24 @@ namespace SugahriStore
             string nuevoNombrePedido = NombrePedidoEntry.Text;
             string nuevoEstado = EstadoEntry.Text;
             string nuevaDivisa = DivisaEntry.Text;
-            decimal nuevoPrecioTotal = decimal.Parse(PrecioTotalEntry.Text);
+            decimal nuevoPrecioTotal;
+
+            // Verificar que los campos no estén vacíos
+            if (string.IsNullOrWhiteSpace(nuevoNombrePedido) ||
+                string.IsNullOrWhiteSpace(nuevoEstado) ||
+                string.IsNullOrWhiteSpace(nuevaDivisa) ||
+                !decimal.TryParse(PrecioTotalEntry.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out nuevoPrecioTotal))
+            {
+                DisplayAlert("Error", "Por favor, complete todos los campos correctamente.", "Aceptar");
+                return;
+            }
+
+            // Verificar que el nombre del pedido comience con '#'
+            if (!nuevoNombrePedido.StartsWith("#"))
+            {
+                DisplayAlert("Error", "El nombre del pedido debe comenzar con '#'.", "Aceptar");
+                return;
+            }
 
             // Actualizar los campos del pedido
             _pedido.Nombre = nuevoNombrePedido;
@@ -74,6 +92,7 @@ namespace SugahriStore
 
             DisplayAlert("Éxito", "Pedido Actualizado Correctamente", "Aceptar");
         }
+
 
 
 

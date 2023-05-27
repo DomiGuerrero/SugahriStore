@@ -6,7 +6,7 @@ namespace SugahriStore.Datos
 {
     public class BaseDeDatosContext : DbContext
     {
-        static readonly string DatabaseName = "dbSqlite.db";
+        private static readonly string DatabaseName = Path.Combine(AppContext.BaseDirectory, "Resources", "Database\\dbSqlite.db");
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
@@ -16,14 +16,14 @@ namespace SugahriStore.Datos
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
-            optionsBuilder.UseSqlite(connectionString: "Filename=C:\\databases\\" + DatabaseName,
+
+            optionsBuilder.UseSqlite(connectionString: "Filename=" + DatabaseName,
                 sqliteOptionsAction: op =>
                 {
                     op.MigrationsAssembly(
                         Assembly.GetExecutingAssembly().FullName
                         );
-                   
+
                 });
 
             base.OnConfiguring(optionsBuilder);

@@ -58,19 +58,28 @@ namespace SugahriStore
         {
             // Obtén una lista de los pedidos seleccionados que se van a borrar
             var pedidosABorrar = PedidosSeleccionados.ToList();
-
-            // Borrar los pedidos de la base de datos
-            foreach (var pedido in pedidosABorrar)
+            if (pedidosABorrar.Count != 0)
             {
-                PedidosRepositorio.BorrarPedido(pedido);
+
+                // Borrar los pedidos de la base de datos
+                foreach (var pedido in pedidosABorrar)
+                {
+                    PedidosRepositorio.BorrarPedido(pedido);
+                }
+
+                // Borrar los pedidos de la lista local
+                _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
+
+                // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
+                Pedidos = _pedidos.ToList();
+                PedidosSeleccionados.Clear();
+                DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
+            }
+            else
+            {
+                DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
             }
 
-            // Borrar los pedidos de la lista local
-            _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
-
-            // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
-            Pedidos = _pedidos.ToList();
-            PedidosSeleccionados.Clear();
         }
 
 

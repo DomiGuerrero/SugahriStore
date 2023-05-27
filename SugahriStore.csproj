@@ -108,6 +108,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Resources\Database\dbSqlite.db">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\Database\dbSqlite.db-shm">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\Database\dbSqlite.db-wal">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Resources\DatosEjemplo\PedidosEjemplo.csv">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

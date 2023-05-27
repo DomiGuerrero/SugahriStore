@@ -15,6 +15,8 @@ namespace SugahriStore.Modelos
         public string EstadoDeEnvio { get; set; }
         public string Divisa { get; set; }
         public decimal Total { get; set; }
+        public int AuditoriaId { get; set; }
+        public Auditoria Auditoria { get; set; }
         public List<LineaPedido> LineasPedido { get; set; }
     }
 }

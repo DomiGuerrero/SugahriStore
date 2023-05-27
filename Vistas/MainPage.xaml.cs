@@ -16,6 +16,7 @@ public partial class MainPage : ContentPage
     private ProductosView ProductosView;
     private UsuariosView UsuariosView;
     private ImportView ImportView;
+    private RolesRepositorio RolesRepositorio = new();
     private Usuario Usuario { get; set; }
 
     private static string img1 = Path.Combine(Path.Combine(AppContext.BaseDirectory, "Resources", "ImagesView\\image1.jpeg"));
@@ -37,8 +38,6 @@ public partial class MainPage : ContentPage
         get { return _images; }
         set { _images = value; }
     }
-    private int currentIndex = 0;
-
 
     public MainPage(Usuario usuario)
     {
@@ -46,6 +45,7 @@ public partial class MainPage : ContentPage
         BindingContext = this;
         Usuario = usuario;
         NombreProeba.Text = "Nombre: " + usuario.Nombre;
+        usuario.Rol = RolesRepositorio.ObtenerRolPorId(usuario.RolId);
         RolName.Text = "Rol: " + usuario.Rol.Nombre;
         LogicaViews.StartTimer(carouselView, Images);
     }

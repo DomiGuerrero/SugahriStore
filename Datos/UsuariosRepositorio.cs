@@ -19,9 +19,13 @@ namespace SugahriStore.Datos
         public void AgregarUsuario(Usuario usuario)
         {
             // Se hashea la contraseña antes de guardarla en la base de datos
-            usuario.Contraseña = UsuariosRepositorio.HashContraseña(usuario.Contraseña);
+            usuario.Contraseña = HashContraseña(usuario.Contraseña);
             context.Usuarios.Add(usuario);
             context.SaveChanges();
+        }
+        public bool UsuarioRegistrado(string nombre)
+        {
+            return context.Usuarios.Any(u => u.Nombre == nombre);
         }
 
         public List<Usuario> ObtenerUsuarios()

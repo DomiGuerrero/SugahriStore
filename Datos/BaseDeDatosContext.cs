@@ -6,7 +6,7 @@ namespace SugahriStore.Datos
 {
     public class BaseDeDatosContext : DbContext
     {
-        static readonly string DatabaseName = "dbSqlite.db";
+        private static readonly string DatabasePath = Path.Combine(AppContext.BaseDirectory, "Resources", "Database", "dbSqlite.db");
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
@@ -16,17 +16,18 @@ namespace SugahriStore.Datos
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
-            optionsBuilder.UseSqlite(connectionString: "Filename=C:\\databases\\" + DatabaseName,
+            string connectionString = $"Data Source={DatabasePath}";
+            optionsBuilder.UseSqlite(connectionString: connectionString,
                 sqliteOptionsAction: op =>
                 {
                     op.MigrationsAssembly(
                         Assembly.GetExecutingAssembly().FullName
                         );
-                   
+
                 });
 
             base.OnConfiguring(optionsBuilder);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,10 +57,21 @@ namespace SugahriStore.Datos
                 entity.HasKey(e => e.Id);
             });
 
+            modelBuilder.Entity<Pedido>()
+                 .HasOne(p => p.Auditoria)
+                 .WithOne()
+                 .HasForeignKey<Pedido>(p => p.AuditoriaId)
+                 .IsRequired(false);
+
             modelBuilder.Entity<Rol>().ToTable("Roles")
                 .HasMany(r => r.Usuarios)
                 .WithOne(u => u.Rol)
                 .HasForeignKey(u => u.RolId);
+
+            modelBuilder.Entity<Rol>().HasData(
+                 new Rol { Id = 1, Nombre = "ADMIN" },
+                 new Rol { Id = 2, Nombre = "USER" }
+            );
 
             base.OnModelCreating(modelBuilder);
         }

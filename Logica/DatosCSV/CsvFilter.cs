@@ -1,4 +1,6 @@
-﻿using SugahriStore.Modelos;
+﻿using SugahriStore.Datos;
+using SugahriStore.Modelos;
+using SugahriStore.Repositorios;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using static System.Net.WebRequestMethods;
@@ -8,14 +10,15 @@ namespace SugahriStore.Lógica.DatosCSV;
 //Generaremos la lista de productos del CSV extraido de la tienda 
 public static class CsvManagement
 {
-    private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
+    //private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
     private static readonly string rutaUsuarios = Path.Combine(AppContext.BaseDirectory, "Resources", "Users\\Usuarios.csv");
     private static readonly string rutaProductos = Path.Combine(AppContext.BaseDirectory, "Resources", "Productos\\Productos.csv");
     private static readonly string rutaPlaceholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
-
+    private static LineaPedidoRepositorio LineaPedidoRepositorio = new();
+    private static AuditoriaRepositorio AuditoriaRepositorio = new();
     public static List<Producto> DeserializarProductos()
     {
-        List<Producto> productos = new ();
+        List<Producto> productos = new();
 
         using (StreamReader reader = new(rutaProductos))
         {
@@ -88,58 +91,122 @@ public static class CsvManagement
         return usuarios;
     }
 
-    public static List<Pedido> DeserializarPedidos()
+    public static void SerializarPedidos(List<Pedido> pedidos, string rutaArchivo)
     {
-        List<Pedido> pedidos = new();
-        Dictionary<string, Pedido> dictPedidos = new();
-
-        using (var reader = new StreamReader(rutaPedidos))
+        using (var writer = new StreamWriter(rutaArchivo))
         {
-            string[] headers = reader.ReadLine().Split(','); // Leemos la cabecera del archivo
-            int nombreIndex = Array.IndexOf(headers, "Name");
-            int emailIndex = Array.IndexOf(headers, "Email");
-            int estadoFinancieroIndex = Array.IndexOf(headers, "Financial Status");
-            int estadoEnvioIndex = Array.IndexOf(headers, "Fulfillment Status");
-            int monedaIndex = Array.IndexOf(headers, "Currency");
-            int totalIndex = Array.IndexOf(headers, "Total");
-            int lineaNombreIndex = Array.IndexOf(headers, "Lineitem name");
-            int lineaPrecioIndex = Array.IndexOf(headers, "Lineitem price");
-            int lineaCantidadIndex = Array.IndexOf(headers, "Lineitem quantity");
+            // Establecer el separador de decimales como el punto
+            var decimalSeparator = ".";
 
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            // Escribir la cabecera del archivo
+            writer.WriteLine("Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity");
+
+            foreach (var pedido in pedidos)
             {
-                string[] fields = line.Split(',');
-                string nombre = fields[nombreIndex];
-                if (!dictPedidos.ContainsKey(nombre))
+                var lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
+
+                if (lineasPedido.Any())
                 {
-                    Pedido pedido = new()
+                    foreach (var lineaPedido in lineasPedido)
                     {
-                        Nombre = nombre,
-                        Email = fields[emailIndex],
-                        Estado = fields[estadoFinancieroIndex],
-                        EstadoDeEnvio = fields[estadoEnvioIndex],
-                        Divisa = fields[monedaIndex],
-                        Total = decimal.Parse(fields[totalIndex], new CultureInfo("en-US")),
-                        LineasPedido = new List<LineaPedido>()
-                    };
-                    dictPedidos.Add(nombre, pedido);
-                    pedidos.Add(pedido);
+                        // Escribir los campos de cada línea de pedido con el separador de decimales como el punto
+                        writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},{lineaPedido.Nombre},{lineaPedido.Precio.ToString().Replace(",", decimalSeparator)},{lineaPedido.Cantidad}");
+                    }
                 }
-                LineaPedido lineaPedido = new()
+                else
                 {
-                    Nombre = fields[lineaNombreIndex],
-                    Precio = decimal.Parse(fields[lineaPrecioIndex], new CultureInfo("en-US")),
-                    Cantidad = int.Parse(fields[lineaCantidadIndex])
-                };
-                dictPedidos[nombre].LineasPedido.Add(lineaPedido);
+                    // Si no hay líneas de pedido, escribir una fila con campos vacíos
+                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},,,");
+                }
+
+                // Insertar la fecha en el campo de Auditoria
+                if (pedido.Auditoria != null)
+                {
+                    pedido.Auditoria.Fecha = DateTime.Now;
+                    // Guardar los cambios en la auditoria
+                    AuditoriaRepositorio.ActualizarAuditoria(pedido.Auditoria);
+                }
             }
         }
-        return pedidos;
     }
 
 
+
+    public static List<Pedido> DeserializarPedidos(string rutaArchivo)
+    {
+        List<Pedido> pedidos = new List<Pedido>();
+
+        using (var reader = new StreamReader(rutaArchivo))
+        {
+            // Leer la cabecera del archivo
+            string cabecera = reader.ReadLine();
+
+            if (cabecera == "Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity")
+            {
+                while (!reader.EndOfStream)
+                {
+                    // Leer cada línea del archivo CSV
+                    string linea = reader.ReadLine();
+                    string[] campos = linea.Split(',');
+
+                    if (campos.Length == 9)
+                    {
+                        // Crear un nuevo pedido y asignar los valores de los campos
+                        Pedido pedido = new Pedido
+                        {
+                            Nombre = campos[0],
+                            Email = campos[1],
+                            Estado = campos[2],
+                            EstadoDeEnvio = campos[3],
+                            Divisa = campos[4],
+                            Total = decimal.Parse(campos[5]),
+                            LineasPedido = new List<LineaPedido>(),
+                            Auditoria = new Auditoria
+                            {
+                                Fecha = DateTime.Now,
+                                NombrePedido = campos[0] // Puedes asignar cualquier valor relevante de acuerdo a tu lógica
+                            }
+                        };
+
+                        // Crear una nueva línea de pedido y asignar los valores de los campos
+                        LineaPedido lineaPedido = new LineaPedido
+                        {
+                            Nombre = campos[6],
+                            Precio = decimal.Parse(campos[7]),
+                            Cantidad = int.Parse(campos[8])
+                        };
+
+                        // Verificar si el valor en campos[7] es un número decimal válido
+                        if (decimal.TryParse(campos[7], out decimal precio))
+                        {
+                            lineaPedido.Precio = precio;
+
+                            // Agregar la línea de pedido al pedido correspondiente
+                            pedido.LineasPedido.Add(lineaPedido);
+
+                            // Agregar el pedido a la lista de pedidos
+                            pedidos.Add(pedido);
+                        }
+                        else
+                        {
+                            // El valor en campos[7] no es un número decimal válido, realizar el manejo de error correspondiente
+                            Console.WriteLine($"Error: El valor en campos[7] no es un número decimal válido. Valor: {campos[7]}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // La cabecera del archivo no coincide, realizar el manejo de error correspondiente
+                Console.WriteLine("Error: La cabecera del archivo CSV no es válida");
+            }
+        }
+
+        return pedidos;
+    }
 }
+
+
 
 
 

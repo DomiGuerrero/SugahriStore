@@ -42,56 +42,38 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid HorizontalOptions="Center" VerticalOptions="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Orientation="Horizontal" Margin="5">
+            <Frame CornerRadius="10" HasShadow="True" Margin="5">
+                <StackLayout Margin="10,0,10,10">
+                    <Label Text="Importar Pedidos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Padding="0,0,0,20" />
 
-            <!-- Frame para la primera sección -->
-            <!-- Importar archivo -->
-            <Frame BackgroundColor="{StaticResource LightPinkColor}" CornerRadius="10" HasShadow="True" Margin="0,0,0,20">
-                <StackLayout Padding="15">
-                    <Label Text="Importar archivo" Style="{StaticResource TitleLabelStyle}" HorizontalOptions="Center" Margin="0,0,0,10" />
+                    <Button Text="Seleccionar archivo de importación" Clicked="OnImportFileClicked" />
 
-                    <Button Text="Seleccionar archivo de importación" Clicked="OnImportFileClicked" Margin="0,0,0,10" />
+                    <Label x:Name="labelErrorImportar" TextColor="Red"  FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,50,0,10" />
 
-                    <Label x:Name="labelErrorImportar" TextColor="Red" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,0,0,10" />
-
-                    <!-- Label para mostrar la ruta del archivo importado -->
                     <Label x:Name="importFilePathLabel" Text="Ruta del archivo importado" FontSize="Small" HorizontalOptions="Center" Margin="0,0,0,10" />
 
-                    <!-- Botón para realizar la importación -->
-                    <Button Text="Importar" Clicked="OnImportClicked" Margin="0,0,0,10" />
+                    <Button Text="Importar" Clicked="OnImportClicked" />
                 </StackLayout>
             </Frame>
 
 
-            <!-- Frame para la segunda sección -->
-            <Frame Grid.Column="2"  CornerRadius="10" HasShadow="True" Padding="20" Margin="10">
+            <Frame CornerRadius="10" HasShadow="True" Margin="5">
                 <StackLayout Spacing="20">
-
                     <Label Text="Exportar Pedidos" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" />
 
-                    <!-- Exportar archivo -->
                     <Button Text="Seleccionar ubicación de exportación" Clicked="OnExportFileClicked" />
 
-                    <!-- Label para mostrar la ruta de exportación -->
                     <Label x:Name="exportFilePathLabel" Text="Ruta de exportación" FontSize="Small" HorizontalOptions="Center" />
 
-                    <!-- Entry para capturar el nombre del archivo -->
                     <Entry x:Name="filenameEntry" Placeholder="Nombre del archivo" />
 
-                    <!-- Botón para realizar la exportación -->
                     <Button Text="Exportar" Clicked="OnExportClicked" />
 
                     <Label x:Name="labelErrorExportar" TextColor="Red" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" />
 
                 </StackLayout>
             </Frame>
-
-        </Grid>
+        </StackLayout>
     </ContentPage.Content>
-
 </ContentPage>

@@ -36,7 +36,6 @@ namespace SugahriStore.Repositorios
                 _dbcontext.SaveChanges();
             }
         }
-
         public List<LineaPedido> BuscarLineasPedidoPorPedido(int pedidoId)
         {
             return _dbcontext.Set<LineaPedido>()

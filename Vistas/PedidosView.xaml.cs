@@ -24,7 +24,7 @@ namespace SugahriStore
         // Nueva propiedad para almacenar los pedidos seleccionados
         public ObservableCollection<Pedido> PedidosSeleccionados { get; set; }
 
-        public PedidosView(Usuario usuario, MainPage mainPage)
+        public PedidosView(MainPage mainPage)
         {
             InitializeComponent();
             _pedidos = PedidosRepositorio.ObtenerPedidos();
@@ -111,13 +111,13 @@ namespace SugahriStore
             var pedido = button?.BindingContext as Pedido;
             if (pedido != null)
             {
-                await Navigation.PushAsync(new DetallePedido(pedido));
+                await Navigation.PushAsync(new DetallePedido(MainPageView, pedido));
             }
         }
 
         public async Task VerDetallesCommand(Pedido pedido)
         {
-            DetallePedido detallePage = new DetallePedido(pedido);
+            DetallePedido detallePage = new DetallePedido(MainPageView, pedido);
             await Navigation.PushAsync(detallePage);
         }
 

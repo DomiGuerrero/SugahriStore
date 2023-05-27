@@ -1,4 +1,5 @@
-﻿using SugahriStore.Modelos;
+﻿using SugahriStore.Datos;
+using SugahriStore.Modelos;
 using SugahriStore.Repositorios;
 using System.Collections.ObjectModel;
 
@@ -9,6 +10,10 @@ namespace SugahriStore
         private readonly Pedido _pedido;
 
         public LineaPedidoRepositorio LineaPedidoRepositorio = new();
+
+        private PedidosRepositorio PedidosRepositorio = new();
+
+        private MainPage MainPage;
         public string NombrePedido => _pedido.Nombre;
         public string Estado => _pedido.Estado;
         public string Divisa => _pedido.Divisa;
@@ -16,8 +21,9 @@ namespace SugahriStore
 
         public ObservableCollection<LineaPedido> LineasPedido { get; set; } = new ObservableCollection<LineaPedido>();
 
-        public DetallePedido(Pedido pedido)
+        public DetallePedido(MainPage mainPage, Pedido pedido)
         {
+            MainPage = mainPage;
             InitializeComponent();
 
             _pedido = pedido;
@@ -50,12 +56,31 @@ namespace SugahriStore
 
         private void GuardarPedidoCommand(object sender, EventArgs e)
         {
-            // Código para guardar el pedido
+            // Obtener los nuevos valores de las entradas
+            string nuevoNombrePedido = NombrePedidoEntry.Text;
+            string nuevoEstado = EstadoEntry.Text;
+            string nuevaDivisa = DivisaEntry.Text;
+            decimal nuevoPrecioTotal = decimal.Parse(PrecioTotalEntry.Text);
+
+            // Actualizar los campos del pedido
+            _pedido.Nombre = nuevoNombrePedido;
+            _pedido.Estado = nuevoEstado;
+            _pedido.Divisa = nuevaDivisa;
+            _pedido.Total = nuevoPrecioTotal;
+
+            // Actualizar el pedido en la base de datos
+            PedidosRepositorio repositorioPedidos = new PedidosRepositorio();
+            repositorioPedidos.ActualizarPedido(_pedido);
+
+            DisplayAlert("Éxito", "Pedido Actualizado Correctamente", "Aceptar");
         }
 
-        private void VerPedidoCommand(object sender, EventArgs e)
+
+
+        private async void Volver(object sender, EventArgs e)
         {
-            // Código para ver los detalles del pedido
+            PedidosView pedidos = new PedidosView(MainPage);
+            await Navigation.PushAsync(pedidos);
         }
     }
 }

@@ -39,8 +39,16 @@ namespace SugahriStore.Datos
 
         public void ActualizarPedido(Pedido pedidoActualizado)
         {
-            _dbContext.Pedidos.Update(pedidoActualizado);
-            _dbContext.SaveChanges();
+            var pedidoExistente = _dbContext.Pedidos.FirstOrDefault(p => p.Id == pedidoActualizado.Id);
+            if (pedidoExistente != null)
+            {
+                pedidoExistente.Nombre = pedidoActualizado.Nombre;
+                pedidoExistente.Estado = pedidoActualizado.Estado;
+                pedidoExistente.Divisa = pedidoActualizado.Divisa;
+                pedidoExistente.Total = pedidoActualizado.Total;
+
+                _dbContext.SaveChanges();
+            }
         }
 
         public void BorrarPedidoPorId(int id)

@@ -75,6 +75,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+		<PackageReference Include="EntityFramework" Version="6.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
@@ -102,6 +103,9 @@
 		<MauiXaml Update="Vistas\ProductosView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Vistas\RegistroView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Vistas\UsuariosView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -109,12 +113,6 @@
 
 	<ItemGroup>
 		<None Update="Resources\Database\dbSqlite.db">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Resources\Database\dbSqlite.db-shm">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Resources\Database\dbSqlite.db-wal">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="Resources\DatosEjemplo\PedidosEjemplo.csv">
@@ -141,6 +139,10 @@
 		<None Update="Resources\Users\Usuarios.csv">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Database\" />
 	</ItemGroup>
 
 </Project>

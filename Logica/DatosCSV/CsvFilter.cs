@@ -1,4 +1,5 @@
-﻿using SugahriStore.Modelos;
+﻿using SugahriStore.Datos;
+using SugahriStore.Modelos;
 using SugahriStore.Repositorios;
 using System.Globalization;
 using System.Net.NetworkInformation;
@@ -13,7 +14,8 @@ public static class CsvManagement
     private static readonly string rutaUsuarios = Path.Combine(AppContext.BaseDirectory, "Resources", "Users\\Usuarios.csv");
     private static readonly string rutaProductos = Path.Combine(AppContext.BaseDirectory, "Resources", "Productos\\Productos.csv");
     private static readonly string rutaPlaceholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
-    private static LineaPedidoRepositorio LineaPedidoRepositorio = new LineaPedidoRepositorio();
+    private static LineaPedidoRepositorio LineaPedidoRepositorio = new();
+    private static AuditoriaRepositorio AuditoriaRepositorio = new();
     public static List<Producto> DeserializarProductos()
     {
         List<Producto> productos = new();
@@ -93,31 +95,42 @@ public static class CsvManagement
     {
         using (var writer = new StreamWriter(rutaArchivo))
         {
+            // Establecer el separador de decimales como el punto
+            var decimalSeparator = ".";
+
             // Escribir la cabecera del archivo
             writer.WriteLine("Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity");
 
             foreach (var pedido in pedidos)
             {
-
                 var lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
 
                 if (lineasPedido.Any())
                 {
                     foreach (var lineaPedido in lineasPedido)
                     {
-                        // Escribir los campos de cada línea de pedido
-                        writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},{lineaPedido.Nombre},{lineaPedido.Precio},{lineaPedido.Cantidad}");
+                        // Escribir los campos de cada línea de pedido con el separador de decimales como el punto
+                        writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},{lineaPedido.Nombre},{lineaPedido.Precio.ToString().Replace(",", decimalSeparator)},{lineaPedido.Cantidad}");
                     }
                 }
                 else
                 {
                     // Si no hay líneas de pedido, escribir una fila con campos vacíos
-                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total},,,");
+                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},,,");
+                }
+
+                // Insertar la fecha en el campo de Auditoria
+                if (pedido.Auditoria != null)
+                {
+                    pedido.Auditoria.Fecha = DateTime.Now;
+                    // Guardar los cambios en la auditoria
+                    AuditoriaRepositorio.ActualizarAuditoria(pedido.Auditoria);
                 }
             }
         }
-
     }
+
+
 
     public static List<Pedido> DeserializarPedidos(string rutaArchivo)
     {
@@ -147,7 +160,12 @@ public static class CsvManagement
                             EstadoDeEnvio = campos[3],
                             Divisa = campos[4],
                             Total = decimal.Parse(campos[5]),
-                            LineasPedido = new List<LineaPedido>()
+                            LineasPedido = new List<LineaPedido>(),
+                            Auditoria = new Auditoria
+                            {
+                                Fecha = DateTime.Now,
+                                NombrePedido = campos[0] // Puedes asignar cualquier valor relevante de acuerdo a tu lógica
+                            }
                         };
 
                         // Crear una nueva línea de pedido y asignar los valores de los campos
@@ -186,9 +204,6 @@ public static class CsvManagement
 
         return pedidos;
     }
-
-
-
 }
 
 

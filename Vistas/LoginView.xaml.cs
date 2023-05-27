@@ -9,36 +9,32 @@ namespace SugahriStore;
 public partial class LoginView : ContentPage
 {
     readonly Login login = new();
-    readonly List<Usuario> usuarios;
-    UsuariosRepositorio UsuariosRepositorio  = new();
-    RolesRepositorio RolesRepositorio = new();
-
+    readonly Usuario usuario = new();
+    UsuariosRepositorio UsuariosRepositorio = new();
     public LoginView()
     {
         InitializeComponent();
-        usuarios = UsuariosRepositorio.ObtenerUsuarios();
     }
 
     public async void Login(object sender, EventArgs e)
     {
-        bool okLogin = false;
-        for (int i = 0; i < usuarios.Count && !okLogin; i++)
+        usuario.Nombre = NombreUsuario.Text;
+        bool existe = UsuariosRepositorio.UsuarioRegistrado(usuario.Nombre);
+        if (existe)
         {
-            if (login.LoginUser(NombreUsuario.Text, ContraseñaUsuario.Text, usuarios[i]))
+            Usuario usuarioRegistrado = UsuariosRepositorio.ObtenerUsuarioPorNombre(usuario.Nombre);
+            if (login.LoginUser(NombreUsuario.Text, ContraseñaUsuario.Text, usuarioRegistrado))
             {
-                Usuario usuarioRegistrado = usuarios[i];
-                Rol rolUsuario = RolesRepositorio.ObtenerRolPorId(usuarios[i].RolId);
-                if (rolUsuario != null)
-                {
-                    usuarioRegistrado.Rol = rolUsuario;
-                    usuarioRegistrado.Rol.Nombre = rolUsuario.Nombre;
-                }
                 await Navigation.PushAsync(new MainPage(usuarioRegistrado));
-                okLogin = true;
             }
-            else MensajeError.Text = " Inicio de sesión incorrecto";
+            else MensajeError.Text = "Contraseña Incorrecta";
         }
-       
+        else MensajeError.Text = "Este usuario no está registrado";
+    }
+    public async void Registro(object sender, EventArgs e)
+    {
+        RegistroView RegistroView = new RegistroView();
+        await Navigation.PushAsync(RegistroView);
     }
 }
 

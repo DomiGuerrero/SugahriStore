@@ -1,14 +1,19 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SugahriStore.Datos;
+using SugahriStore.Modelos;
 
 namespace SugahriStore;
 
 public static class MauiProgram
 {
+
     public static MauiApp CreateMauiApp()
     {
-        BaseDeDatosContext context = new BaseDeDatosContext();
+        using (var dbContext = new BaseDeDatosContext())
+        {
+            dbContext.Database.EnsureCreated();
+        }
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

@@ -3,6 +3,7 @@ using SugahriStore.Datos;
 using SugahriStore.Modelos;
 using SugahriStore.Lógica;
 using SugahriStore.Lógica.DatosCSV;
+using System.Collections.Generic;
 
 namespace SugahriStore;
 

@@ -19,6 +19,9 @@ public static class CsvManagement
     private static readonly string rutaPlaceholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
     private static LineaPedidoRepositorio LineaPedidoRepositorio = new();
     private static AuditoriaRepositorio AuditoriaRepositorio = new();
+    private static ClienteRepositorio ClienteRepositorio = new();
+
+
     public static List<Producto> DeserializarProductos()
     {
         List<Producto> productos = new();
@@ -93,43 +96,72 @@ public static class CsvManagement
 
     public static void SerializarPedidos(List<Pedido> pedidos, string rutaArchivo)
     {
-        using (var writer = new StreamWriter(rutaArchivo))
+        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            // Establecer el separador de decimales como el punto
-            var decimalSeparator = ".";
+            Delimiter = ",",
+            HasHeaderRecord = true,
+            MissingFieldFound = null
+        };
 
-            // Escribir la cabecera del archivo
-            writer.WriteLine("Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity");
+        using (var writer = new StreamWriter(rutaArchivo))
+        using (var csv = new CsvWriter(writer, csvConfig))
+        {
+            // Escribir la cabecera
+            csv.WriteField("Name");
+            csv.WriteField("Email");
+            csv.WriteField("Financial Status");
+            csv.WriteField("Fulfillment Status");
+            csv.WriteField("Currency");
+            csv.WriteField("Total");
+            csv.WriteField("Lineitem name");
+            csv.WriteField("Lineitem price");
+            csv.WriteField("Lineitem quantity");
+            csv.WriteField("Shipping Name");
+            csv.WriteField("Shipping Street");
+            csv.WriteField("Shipping Country");
+            csv.NextRecord();
 
             foreach (var pedido in pedidos)
             {
-                var lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
+                // Obtener el cliente y las líneas de pedido del repositorio
+                Cliente cliente = ClienteRepositorio.ObtenerClientePorPedido(pedido);
+                List<LineaPedido> lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
 
-                if (lineasPedido.Any())
-                {
-                    foreach (var lineaPedido in lineasPedido)
-                    {
-                        // Escribir los campos de cada línea de pedido con el separador de decimales como el punto
-                        writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},{lineaPedido.Nombre},{lineaPedido.Precio.ToString().Replace(",", decimalSeparator)},{lineaPedido.Cantidad}");
-                    }
-                }
-                else
-                {
-                    // Si no hay líneas de pedido, escribir una fila con campos vacíos
-                    writer.WriteLine($"{pedido.Nombre},{pedido.Email},{pedido.Estado},{pedido.EstadoDeEnvio},{pedido.Divisa},{pedido.Total.ToString().Replace(",", decimalSeparator)},,,");
-                }
+                // Escribir los datos del pedido
+                csv.WriteField(pedido.Nombre);
+                csv.WriteField(pedido.Email);
+                csv.WriteField(pedido.Estado);
+                csv.WriteField(pedido.EstadoDeEnvio);
+                csv.WriteField(pedido.Divisa);
+                csv.WriteField(pedido.Total);
+                csv.WriteField(string.Empty);
+                csv.WriteField(string.Empty);
+                csv.WriteField(string.Empty);
+                csv.WriteField(cliente.Nombre);
+                csv.WriteField(cliente.Direccion);
+                csv.WriteField(cliente.Ciudad);
+                csv.NextRecord();
 
-                // Insertar la fecha en el campo de Auditoria
-                if (pedido.Auditoria != null)
+                // Escribir las líneas de pedido
+                foreach (var lineaPedido in lineasPedido)
                 {
-                    pedido.Auditoria.Fecha = DateTime.Now;
-                    // Guardar los cambios en la auditoria
-                    AuditoriaRepositorio.ActualizarAuditoria(pedido.Auditoria);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(lineaPedido.Nombre);
+                    csv.WriteField(lineaPedido.Precio);
+                    csv.WriteField(lineaPedido.Cantidad);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.WriteField(string.Empty);
+                    csv.NextRecord();
                 }
             }
         }
     }
-
 
 
     public static List<Pedido> DeserializarPedidos(string rutaArchivo)

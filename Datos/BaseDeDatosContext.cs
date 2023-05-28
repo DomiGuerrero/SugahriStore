@@ -11,6 +11,7 @@ namespace SugahriStore.Datos
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Auditoria> Auditorias { get; set; }
         public DbSet<Rol> Roles { get; set; }
 
@@ -51,6 +52,12 @@ namespace SugahriStore.Datos
                 entity.HasKey(e => e.Id);
             });
 
+            modelBuilder.Entity<Cliente>().ToTable("Clientes");
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
             modelBuilder.Entity<Auditoria>().ToTable("Auditorias");
             modelBuilder.Entity<Auditoria>(entity =>
             {
@@ -58,10 +65,16 @@ namespace SugahriStore.Datos
             });
 
             modelBuilder.Entity<Pedido>()
-                 .HasOne(p => p.Auditoria)
-                 .WithOne()
-                 .HasForeignKey<Pedido>(p => p.AuditoriaId)
-                 .IsRequired(false);
+                .HasOne(p => p.Auditoria)
+                .WithOne()
+                .HasForeignKey<Pedido>(p => p.AuditoriaId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Cliente)
+                .WithOne()
+                .HasForeignKey<Pedido>(p => p.ClienteId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Rol>().ToTable("Roles")
                 .HasMany(r => r.Usuarios)
@@ -69,12 +82,13 @@ namespace SugahriStore.Datos
                 .HasForeignKey(u => u.RolId);
 
             modelBuilder.Entity<Rol>().HasData(
-                 new Rol { Id = 1, Nombre = "ADMIN" },
-                 new Rol { Id = 2, Nombre = "USER" }
+                new Rol { Id = 1, Nombre = "ADMIN" },
+                new Rol { Id = 2, Nombre = "USER" }
             );
 
             base.OnModelCreating(modelBuilder);
         }
+
         public void CrearBaseDeDatos()
         {
             Database.EnsureCreated();

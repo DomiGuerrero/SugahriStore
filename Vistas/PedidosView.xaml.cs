@@ -10,7 +10,6 @@ namespace SugahriStore
         private List<Pedido> _pedidos;
         private List<Pedido> _pedidosFiltrados;
         PedidosRepositorio PedidosRepositorio = new PedidosRepositorio();
-        DetallePedido detallePage;
         public List<Pedido> Pedidos
         {
             get => _pedidosFiltrados;

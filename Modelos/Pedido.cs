@@ -17,6 +17,8 @@ namespace SugahriStore.Modelos
         public decimal Total { get; set; }
         public int AuditoriaId { get; set; }
         public Auditoria Auditoria { get; set; }
+        public Cliente Cliente { get; set; }
+        public int ClienteId { get; set; }
         public List<LineaPedido> LineasPedido { get; set; }
     }
 }

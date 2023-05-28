@@ -138,11 +138,12 @@
                                                FontSize="14"
                                                TextColor="Black"
                                                VerticalOptions="Center" />
-                                        <Label Text="  {Binding Total}"
+                                        <Label Text="{Binding Total, StringFormat='Total: {0:F2}'}"
                                                Grid.Row="3"
                                                Grid.Column="1"
                                                FontSize="14"
                                                TextColor="Black" />
+
 
                                         <Button Text="Detalles"
                                                 BackgroundColor="#FFC4D6"

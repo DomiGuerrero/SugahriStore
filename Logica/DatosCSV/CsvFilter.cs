@@ -1,6 +1,9 @@
-﻿using SugahriStore.Datos;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using SugahriStore.Datos;
 using SugahriStore.Modelos;
 using SugahriStore.Repositorios;
+using System.Formats.Asn1;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using static System.Net.WebRequestMethods;
@@ -57,9 +60,6 @@ public static class CsvManagement
             writer.WriteLine(line);
         }
     }
-
-
-
 
     public static List<Usuario> DeserializarUsuarios()
     {
@@ -136,83 +136,97 @@ public static class CsvManagement
     {
         List<Pedido> pedidos = new List<Pedido>();
 
-        using (var reader = new StreamReader(rutaArchivo))
+        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            // Leer la cabecera del archivo
-            string cabecera = reader.ReadLine();
+            Delimiter = ",",
+            HasHeaderRecord = true,
+            MissingFieldFound = null
+        };
 
-            if (cabecera == "Name,Email,Financial Status,Fulfillment Status,Currency,Total,Lineitem name,Lineitem price,Lineitem quantity")
+        using (var reader = new StreamReader(rutaArchivo))
+        using (var csv = new CsvReader(reader, csvConfig))
+        {
+            csv.Read();
+            csv.ReadHeader();
+
+            if (csv.HeaderRecord.Contains("Name") && csv.HeaderRecord.Contains("Email") &&
+                csv.HeaderRecord.Contains("Financial Status") && csv.HeaderRecord.Contains("Fulfillment Status") &&
+                csv.HeaderRecord.Contains("Currency") && csv.HeaderRecord.Contains("Total") &&
+                csv.HeaderRecord.Contains("Lineitem name") && csv.HeaderRecord.Contains("Lineitem price") &&
+                csv.HeaderRecord.Contains("Lineitem quantity") && csv.HeaderRecord.Contains("Shipping Name") &&
+                csv.HeaderRecord.Contains("Shipping Street") && csv.HeaderRecord.Contains("Shipping Country"))
             {
-                while (!reader.EndOfStream)
+                while (csv.Read())
                 {
-                    // Leer cada línea del archivo CSV
-                    string linea = reader.ReadLine();
-                    string[] campos = linea.Split(',');
+                    string nombre = csv.GetField<string>("Name");
+                    string email = csv.GetField<string>("Email");
+                    string estado = csv.GetField<string>("Financial Status");
+                    string estadoEnvio = csv.GetField<string>("Fulfillment Status");
+                    string divisa = csv.GetField<string>("Currency");
+                    string totalStr = csv.GetField<string>("Total");
+                    decimal total;
 
-                    if (campos.Length == 9)
+                    if (!string.IsNullOrEmpty(totalStr) && decimal.TryParse(totalStr.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out total))
                     {
-                        // Crear un nuevo pedido y asignar los valores de los campos
+                        string lineaNombre = csv.GetField<string>("Lineitem name");
+                        decimal lineaPrecio = csv.GetField<decimal>("Lineitem price");
+                        int lineaCantidad = csv.GetField<int>("Lineitem quantity");
+
+                        string clienteNombre = csv.GetField<string>("Shipping Name");
+                        string clienteDireccion = csv.GetField<string>("Shipping Street");
+                        string clienteCiudad = csv.GetField<string>("Shipping Country");
+
+                        Cliente cliente = new Cliente
+                        {
+                            Nombre = clienteNombre,
+                            Direccion = clienteDireccion,
+                            Ciudad = clienteCiudad
+                        };
+
                         Pedido pedido = new Pedido
                         {
-                            Nombre = campos[0],
-                            Email = campos[1],
-                            Estado = campos[2],
-                            EstadoDeEnvio = campos[3],
-                            Divisa = campos[4],
-                            Total = decimal.Parse(campos[5]),
+                            Nombre = nombre,
+                            Email = email,
+                            Estado = estado,
+                            EstadoDeEnvio = estadoEnvio,
+                            Divisa = divisa,
+                            Total = total,
                             LineasPedido = new List<LineaPedido>(),
                             Auditoria = new Auditoria
                             {
                                 Fecha = DateTime.Now,
-                                NombrePedido = campos[0] // Puedes asignar cualquier valor relevante de acuerdo a tu lógica
-                            }
+                                NombrePedido = nombre
+                            },
+                            Cliente = cliente
                         };
 
-                        // Crear una nueva línea de pedido y asignar los valores de los campos
                         LineaPedido lineaPedido = new LineaPedido
                         {
-                            Nombre = campos[6],
-                            Precio = decimal.Parse(campos[7]),
-                            Cantidad = int.Parse(campos[8])
+                            Nombre = lineaNombre,
+                            Precio = lineaPrecio,
+                            Cantidad = lineaCantidad
                         };
 
-                        // Verificar si el valor en campos[7] es un número decimal válido
-                        if (decimal.TryParse(campos[7], out decimal precio))
-                        {
-                            lineaPedido.Precio = precio;
-
-                            // Agregar la línea de pedido al pedido correspondiente
-                            pedido.LineasPedido.Add(lineaPedido);
-
-                            // Agregar el pedido a la lista de pedidos
-                            pedidos.Add(pedido);
-                        }
-                        else
-                        {
-                            // El valor en campos[7] no es un número decimal válido, realizar el manejo de error correspondiente
-                            Console.WriteLine($"Error: El valor en campos[7] no es un número decimal válido. Valor: {campos[7]}");
-                        }
+                        pedido.LineasPedido.Add(lineaPedido);
+                        pedidos.Add(pedido);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error: No se pudo convertir el valor '{totalStr}' a decimal para el campo 'Total'");
                     }
                 }
             }
             else
             {
-                // La cabecera del archivo no coincide, realizar el manejo de error correspondiente
                 Console.WriteLine("Error: La cabecera del archivo CSV no es válida");
             }
         }
 
         return pedidos;
     }
+
+
 }
-
-
-
-
-
-
-
-
 
 
 

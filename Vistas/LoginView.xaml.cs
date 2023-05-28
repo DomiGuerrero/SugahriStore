@@ -4,6 +4,7 @@ using SugahriStore.Modelos;
 using SugahriStore.Lógica;
 using SugahriStore.Lógica.DatosCSV;
 using System.Collections.Generic;
+using SugahriStore.Logica;
 
 namespace SugahriStore;
 
@@ -12,6 +13,7 @@ public partial class LoginView : ContentPage
     readonly Login login = new();
     readonly Usuario usuario = new();
     UsuariosRepositorio UsuariosRepositorio = new();
+
     public LoginView()
     {
         InitializeComponent();

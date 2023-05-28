@@ -1,13 +1,16 @@
 ﻿using SkiaSharp;
+using SugahriStore.Datos;
+using SugahriStore.Modelos;
 
 namespace SugahriStore.Logica
 {
-    public class EtiquetaManager
+    public static class EtiquetaManager
     {
-        public void CrearEtiqueta()
+        private static readonly ClienteRepositorio ClienteRepositorio = new ClienteRepositorio();
+        public static async void CrearEtiqueta(string RutaArchivo, string NombreArchivo, Pedido Pedido)
         {
-            string rutaProductos = "C:\\Users\\Domi\\source\\repos\\SugahriStore\\Resources\\Images\\fondo2.jpg";
-            SKBitmap imagenFondo = SKBitmap.Decode(rutaProductos);
+            string rutaImagenFondo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images\\fondo2.jpg");
+            SKBitmap imagenFondo = SKBitmap.Decode(rutaImagenFondo);
 
             // Crear un nuevo lienzo SkiaSharp con las dimensiones de la imagen de fondo
             var surface = SKSurface.Create(new SKImageInfo(imagenFondo.Width, imagenFondo.Height));
@@ -35,10 +38,12 @@ namespace SugahriStore.Logica
 
             canvas.DrawRoundRect(labelRect, cornerRadius, cornerRadius, borderPaint);
 
+            Pedido.Cliente = ClienteRepositorio.ObtenerClientePorPedido(Pedido);
+
             // Dibujar la información del pedido
-            string pedido = "Número de pedido:\n";
-            string numeroPedido = "12345";
-            string fecha = "Fecha: 2023-05-28";
+            string nombre = Pedido.Cliente.Nombre + "\n";
+            string direccion = Pedido.Cliente.Direccion + "\n";
+            string Pais = Pedido.Cliente.Ciudad;
 
             // Estilo del texto
             SKTypeface typeface = SKTypeface.FromFamilyName("Arial", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright);
@@ -75,24 +80,24 @@ namespace SugahriStore.Logica
             float fechaY = textY + 75 - 60; // Posición vertical para la línea de fecha
 
             // Dibujar texto en lienzo
-            canvas.DrawText(pedido, textX, pedidoY, pedidoPaint);
+            canvas.DrawText(nombre, textX, pedidoY, pedidoPaint);
 
             // Calcular la posición vertical para el número de pedido en una nueva línea
             numeroPedidoY = pedidoY + pedidoPaint.TextSize;
 
-            canvas.DrawText(numeroPedido, textX, numeroPedidoY, numeroPedidoPaint);
+            canvas.DrawText(direccion, textX, numeroPedidoY, numeroPedidoPaint);
 
             // Calcular la posición vertical para la línea de fecha en una nueva línea
             fechaY = numeroPedidoY + numeroPedidoPaint.TextSize;
 
-            canvas.DrawText(fecha, textX, fechaY, fechaPaint);
+            canvas.DrawText(Pais, textX, fechaY, fechaPaint);
 
-            // Exportar el lienzo como un archivo JPG en la ruta C:/Database
-            string rutaArchivo = @"C:/databases/etiqueta.jpg";
+            // Exportar el lienzo como un archivo JPG 
+            string rutaArchivo = RutaArchivo;
 
             using (var image = surface.Snapshot())
             using (var data = image.Encode(SKEncodedImageFormat.Jpeg, 100))
-            using (var stream = File.OpenWrite(rutaArchivo))
+            using (var stream = File.OpenWrite(rutaArchivo + "\\" + NombreArchivo + ".jpg"))
             {
                 data.SaveTo(stream);
             }

@@ -85,8 +85,8 @@ namespace SugahriStore.Vistas
                 List<Pedido> pedidos = CsvManagement.DeserializarPedidos(filePath);
                 this.PedidosRepositorio.InsertarPedidos(pedidos);
 
-                 // Mostrar un mensaje de éxito
-                 DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+                // Mostrar un mensaje de éxito
+                DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
             }
             else
             {
@@ -94,7 +94,5 @@ namespace SugahriStore.Vistas
                 DisplayAlert("Error", "Por favor, selecciona un archivo para importar", "Aceptar");
             }
         }
-
-
     }
 }

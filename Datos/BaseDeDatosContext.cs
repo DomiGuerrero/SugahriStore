@@ -11,7 +11,7 @@ namespace SugahriStore.Datos
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Auditoria> Auditorias { get; set; }
         public DbSet<Rol> Roles { get; set; }
 

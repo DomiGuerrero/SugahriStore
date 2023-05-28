@@ -1,6 +1,7 @@
 using SugahriStore.Modelos;
 using System.Collections.ObjectModel;
 using SugahriStore.Datos;
+using SugahriStore.Logica;
 
 namespace SugahriStore
 {
@@ -33,6 +34,7 @@ namespace SugahriStore
 
             // Inicializar la lista de pedidos seleccionados
             PedidosSeleccionados = new ObservableCollection<Pedido>();
+
         }
         private void Seleccionar(object sender, CheckedChangedEventArgs e)
         {

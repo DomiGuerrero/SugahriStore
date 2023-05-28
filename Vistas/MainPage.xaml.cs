@@ -16,6 +16,8 @@ public partial class MainPage : ContentPage
     private ProductosView ProductosView;
     private UsuariosView UsuariosView;
     private ImportView ImportView;
+    private EtiquetasView EtiquetasView;
+
     private RolesRepositorio RolesRepositorio = new();
     private Usuario Usuario { get; set; }
 
@@ -62,7 +64,8 @@ public partial class MainPage : ContentPage
     }
     private void Button3_Clicked(object sender, EventArgs e)
     {
-
+        EtiquetasView = new EtiquetasView(this);
+        Navigation.PushAsync(EtiquetasView);
     }
     private void Button4_Clicked(object sender, EventArgs e)
     {

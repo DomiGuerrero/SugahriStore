@@ -90,6 +90,9 @@
 		<MauiXaml Update="Vistas\DetalleProducto.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Vistas\EtiquetasView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Vistas\ImportView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

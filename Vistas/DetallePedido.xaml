@@ -48,17 +48,17 @@
                     <Frame CornerRadius="10" HasShadow="True" Margin="0,10">
                         <StackLayout Padding="20">
                             <Label Text="Nombre del pedido:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                            <Entry Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Entry x:Name="NombrePedidoEntry" Text="{Binding NombrePedido}" FontSize="Medium" Margin="0,0,0,20" />
                             <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                            <Entry Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Entry x:Name="EstadoEntry" Text="{Binding Estado}" FontSize="Medium" Margin="0,0,0,20" />
                             <Label Text="Divisa:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                            <Entry Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20" />
+                            <Entry x:Name="DivisaEntry" Text="{Binding Divisa}" FontSize="Medium" Margin="0,0,0,20" />
                             <Label Text="Precio total:" FontAttributes="Bold" FontSize="Medium" Margin="0,0,0,5" TextColor="{StaticResource TextColor}" />
-                            <Entry Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20" />
+                            <Entry x:Name="PrecioTotalEntry" Text="{Binding PrecioTotal}" Keyboard="Numeric" FontSize="Medium" Margin="0,0,0,20" />
                         </StackLayout>
                     </Frame>
-                    <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding GuardarPedidoCommand}"/>
-                    <Button Text="Ver Productos" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Command="{Binding VerPedidoCommand}"/>
+                    <Button Text="Guardar" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Clicked="GuardarPedidoCommand"/>
+                    <Button Text="Volver" FontSize="Medium" CornerRadius="10" Margin="0,30,0,0" BackgroundColor="{StaticResource MainColor}" TextColor="{StaticResource BackgroundColor}" Clicked="Volver"/>
                 </StackLayout>
             </ScrollView>
 

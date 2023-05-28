@@ -52,7 +52,7 @@ public partial class MainPage : ContentPage
 
     private void Button1_Clicked(object sender, EventArgs e)
     {
-        pedidosView = new PedidosView(this.Usuario, this);
+        pedidosView = new PedidosView(this);
         Navigation.PushAsync(pedidosView);
     }
     private void Button2_Clicked(object sender, EventArgs e)

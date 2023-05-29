@@ -99,14 +99,12 @@ public static class CsvManagement
         var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             Delimiter = ",",
-            HasHeaderRecord = true,
-            MissingFieldFound = null
+            HasHeaderRecord = true
         };
 
         using (var writer = new StreamWriter(rutaArchivo))
         using (var csv = new CsvWriter(writer, csvConfig))
         {
-            // Escribir la cabecera
             csv.WriteField("Name");
             csv.WriteField("Email");
             csv.WriteField("Financial Status");
@@ -123,45 +121,34 @@ public static class CsvManagement
 
             foreach (var pedido in pedidos)
             {
-                // Obtener el cliente y las líneas de pedido del repositorio
-                Cliente cliente = ClienteRepositorio.ObtenerClientePorPedido(pedido);
-                List<LineaPedido> lineasPedido = LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
+                bool isFirstLine = true;
 
-                // Escribir los datos del pedido
-                csv.WriteField(pedido.Nombre);
-                csv.WriteField(pedido.Email);
-                csv.WriteField(pedido.Estado);
-                csv.WriteField(pedido.EstadoDeEnvio);
-                csv.WriteField(pedido.Divisa);
-                csv.WriteField(pedido.Total);
-                csv.WriteField(string.Empty);
-                csv.WriteField(string.Empty);
-                csv.WriteField(string.Empty);
-                csv.WriteField(cliente.Nombre);
-                csv.WriteField(cliente.Direccion);
-                csv.WriteField(cliente.Ciudad);
-                csv.NextRecord();
-
-                // Escribir las líneas de pedido
-                foreach (var lineaPedido in lineasPedido)
+                foreach (var lineaPedido in pedido.LineasPedido)
                 {
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
+                    csv.WriteField(pedido.Nombre);
+                    csv.WriteField(pedido.Email);
+                    csv.WriteField(isFirstLine ? pedido.Estado : "");
+                    csv.WriteField(isFirstLine ? pedido.EstadoDeEnvio : "");
+                    csv.WriteField(isFirstLine ? pedido.Divisa : "");
+                    csv.WriteField(isFirstLine ? pedido.Total.ToString(CultureInfo.InvariantCulture) : "");
+
+                    // Escribir los campos específicos de la línea de pedido
                     csv.WriteField(lineaPedido.Nombre);
-                    csv.WriteField(lineaPedido.Precio);
+                    csv.WriteField(lineaPedido.Precio.ToString(CultureInfo.InvariantCulture));
                     csv.WriteField(lineaPedido.Cantidad);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
-                    csv.WriteField(string.Empty);
+                    csv.WriteField(isFirstLine ? pedido.Cliente.Nombre : "");
+                    csv.WriteField(isFirstLine ? pedido.Cliente.Direccion : "");
+                    csv.WriteField(isFirstLine ? pedido.Cliente.Ciudad : "");
+
                     csv.NextRecord();
+
+                    isFirstLine = false;
                 }
             }
         }
     }
+
+
 
 
     public static List<Pedido> DeserializarPedidos(string rutaArchivo)
@@ -188,64 +175,74 @@ public static class CsvManagement
                 csv.HeaderRecord.Contains("Lineitem quantity") && csv.HeaderRecord.Contains("Shipping Name") &&
                 csv.HeaderRecord.Contains("Shipping Street") && csv.HeaderRecord.Contains("Shipping Country"))
             {
+                Pedido pedidoActual = null;
+
                 while (csv.Read())
                 {
-                    string nombre = csv.GetField<string>("Name");
-                    string email = csv.GetField<string>("Email");
-                    string estado = csv.GetField<string>("Financial Status");
-                    string estadoEnvio = csv.GetField<string>("Fulfillment Status");
-                    string divisa = csv.GetField<string>("Currency");
-                    string totalStr = csv.GetField<string>("Total");
-                    decimal total;
+                    string nombreActual = csv.GetField<string>("Name");
 
-                    if (!string.IsNullOrEmpty(totalStr) && decimal.TryParse(totalStr.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out total))
+                    if (pedidoActual == null || pedidoActual.Nombre != nombreActual)
                     {
-                        string lineaNombre = csv.GetField<string>("Lineitem name");
-                        decimal lineaPrecio = csv.GetField<decimal>("Lineitem price");
-                        int lineaCantidad = csv.GetField<int>("Lineitem quantity");
-
-                        string clienteNombre = csv.GetField<string>("Shipping Name");
-                        string clienteDireccion = csv.GetField<string>("Shipping Street");
-                        string clienteCiudad = csv.GetField<string>("Shipping Country");
-
-                        Cliente cliente = new Cliente
+                        // Crear un nuevo pedido
+                        if (pedidoActual != null)
                         {
-                            Nombre = clienteNombre,
-                            Direccion = clienteDireccion,
-                            Ciudad = clienteCiudad
-                        };
+                            pedidos.Add(pedidoActual);
+                        }
 
-                        Pedido pedido = new Pedido
+                        decimal total;
+                        string totalStr = csv.GetField<string>("Total");
+
+                        if (!string.IsNullOrEmpty(totalStr) && decimal.TryParse(totalStr.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out total))
                         {
-                            Nombre = nombre,
-                            Email = email,
-                            Estado = estado,
-                            EstadoDeEnvio = estadoEnvio,
-                            Divisa = divisa,
-                            Total = total,
-                            LineasPedido = new List<LineaPedido>(),
-                            Auditoria = new Auditoria
+                            pedidoActual = new Pedido
                             {
-                                Fecha = DateTime.Now,
-                                NombrePedido = nombre
-                            },
-                            Cliente = cliente
-                        };
+                                Nombre = nombreActual,
+                                Email = csv.GetField<string>("Email"),
+                                Estado = csv.GetField<string>("Financial Status"),
+                                EstadoDeEnvio = csv.GetField<string>("Fulfillment Status"),
+                                Divisa = csv.GetField<string>("Currency"),
+                                Total = total,
+                                LineasPedido = new List<LineaPedido>(),
+                                Auditoria = new Auditoria
+                                {
+                                    Fecha = DateTime.Now,
+                                    NombrePedido = nombreActual
+                                },
+                                Cliente = new Cliente
+                                {
+                                    Nombre = csv.GetField<string>("Shipping Name"),
+                                    Direccion = csv.GetField<string>("Shipping Street"),
+                                    Ciudad = csv.GetField<string>("Shipping Country")
+                                }
+                            };
 
-                        LineaPedido lineaPedido = new LineaPedido
+                            pedidos.Add(pedidoActual);
+                        }
+                        else
                         {
-                            Nombre = lineaNombre,
-                            Precio = lineaPrecio,
-                            Cantidad = lineaCantidad
-                        };
+                            Console.WriteLine($"Error: No se pudo convertir el valor '{totalStr}' a decimal para el campo 'Total'");
+                        }
+                    }
 
-                        pedido.LineasPedido.Add(lineaPedido);
-                        pedidos.Add(pedido);
-                    }
-                    else
+                    // Leer los valores de la línea y agregarlos al pedido actual
+                    string lineaNombre = csv.GetField<string>("Lineitem name");
+                    decimal lineaPrecio = csv.GetField<decimal>("Lineitem price");
+                    int lineaCantidad = csv.GetField<int>("Lineitem quantity");
+
+                    LineaPedido lineaPedido = new LineaPedido
                     {
-                        Console.WriteLine($"Error: No se pudo convertir el valor '{totalStr}' a decimal para el campo 'Total'");
-                    }
+                        Nombre = lineaNombre,
+                        Precio = lineaPrecio,
+                        Cantidad = lineaCantidad
+                    };
+
+                    pedidoActual.LineasPedido.Add(lineaPedido);
+                }
+
+                // Agregar el último pedido actual a la lista de pedidos
+                if (pedidoActual != null)
+                {
+                    pedidos.Add(pedidoActual);
                 }
             }
             else
@@ -256,7 +253,6 @@ public static class CsvManagement
 
         return pedidos;
     }
-
 
 }
 

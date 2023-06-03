@@ -1,11 +1,7 @@
 using SugahriStore.Datos;
-using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Modelos;
 using SugahriStore.Vistas;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+
 
 namespace SugahriStore;
 
@@ -27,6 +23,7 @@ public partial class ProductosView : ContentPage
     public ProductosView(MainPage mainPage)
     {
         InitializeComponent();
+
         _productos = ProductosRepositorio.ObtenerTodos();
         _productosFiltrados = _productos;
         MainPageView = mainPage;
@@ -60,7 +57,7 @@ public partial class ProductosView : ContentPage
         var producto = button?.BindingContext as Producto;
         if (producto != null)
         {
-            Navigation.PushAsync(new DetalleProducto(producto,this));
+            Navigation.PushAsync(new DetalleProducto(producto, this));
         }
     }
     private async void Regresar(object sender, EventArgs e)

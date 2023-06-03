@@ -49,7 +49,14 @@ public partial class MainPage : ContentPage
         NombreProeba.Text = "Nombre: " + usuario.Nombre;
         usuario.Rol = RolesRepositorio.ObtenerRolPorId(usuario.RolId);
         RolName.Text = "Rol: " + usuario.Rol.Nombre;
-        LogicaViews.StartTimer(carouselView, Images);
+        try
+        {
+            _ = LogicaViews.StartTimer(carouselView, Images);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error en StartTimer: " + ex.Message);
+        }
     }
 
     private void Button1_Clicked(object sender, EventArgs e)

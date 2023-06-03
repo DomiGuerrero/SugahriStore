@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SugahriStore.Modelos;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SugahriStore.Datos
 {
@@ -29,6 +31,12 @@ namespace SugahriStore.Datos
 
             base.OnConfiguring(optionsBuilder);
 
+        }
+        private static string HashContraseña(string password)
+        {
+            byte[] hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+            string hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            return hash;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,7 +88,15 @@ namespace SugahriStore.Datos
                 .HasMany(r => r.Usuarios)
                 .WithOne(u => u.Rol)
                 .HasForeignKey(u => u.RolId);
-
+            modelBuilder.Entity<Usuario>().HasData(
+            new Usuario
+            {
+                Id = -1,
+                Nombre = "ADMIN",
+                Contraseña = HashContraseña("ADMIN"),
+                RolId = 1
+            }
+            );
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { Id = 1, Nombre = "ADMIN" },
                 new Rol { Id = 2, Nombre = "USER" }

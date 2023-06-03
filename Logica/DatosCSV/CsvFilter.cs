@@ -122,7 +122,6 @@ public static class CsvManagement
             foreach (var pedido in pedidos)
             {
                 bool isFirstLine = true;
-
                 foreach (var lineaPedido in pedido.LineasPedido)
                 {
                     csv.WriteField(pedido.Nombre);

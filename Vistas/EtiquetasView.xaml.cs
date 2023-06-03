@@ -1,4 +1,6 @@
+using CommunityToolkit.Maui.Storage;
 using SugahriStore.Datos;
+using SugahriStore.Logica;
 using SugahriStore.Modelos;
 using System.Collections.ObjectModel;
 
@@ -31,13 +33,10 @@ public partial class EtiquetasView : ContentPage
         _pedidos = PedidosRepositorio.ObtenerPedidos();
         _pedidosFiltrados = _pedidos;
         MainPageView = mainPage;
+        BindingContext = this;
 
-
-
-        /*for (int i = 0; i < Pedidos.Count; i++)
-        {
-            EtiquetaManager.CrearEtiqueta("C:\\databases", "etiqueta" + i, Pedidos[i]);
-        }*/
+        // Inicializar la lista de pedidos seleccionados
+        PedidosSeleccionados = new ObservableCollection<Pedido>();
     }
     private void Seleccionar(object sender, CheckedChangedEventArgs e)
     {
@@ -58,26 +57,21 @@ public partial class EtiquetasView : ContentPage
             }
         }
     }
-    private void BorrarSeleccionados(object sender, EventArgs e)
+    private async void ExportarSeleccionados(object sender, EventArgs e)
     {
+        var folder = await FolderPicker.PickAsync(default);
+
+        string direccion = $"{folder.Folder.Path}";
         // Obtén una lista de los pedidos seleccionados que se van a borrar
         var pedidosABorrar = PedidosSeleccionados.ToList();
         if (pedidosABorrar.Count != 0)
         {
 
-            // Borrar los pedidos de la base de datos
-            foreach (var pedido in pedidosABorrar)
+            for (int i = 0; i < PedidosSeleccionados.Count; i++)
             {
-                PedidosRepositorio.BorrarPedido(pedido);
+                EtiquetaManager.CrearEtiqueta(direccion, Pedidos[i]);
             }
-
-            // Borrar los pedidos de la lista local
-            _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
-
-            // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
-            Pedidos = _pedidos.ToList();
-            PedidosSeleccionados.Clear();
-            DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
+            DisplayAlert("Éxito", "Etiquetas exportadas correctamente", "Aceptar");
         }
         else
         {
@@ -85,7 +79,6 @@ public partial class EtiquetasView : ContentPage
         }
 
     }
-
 
     private void FiltrarPorNombrePedido(string filtro)
     {
@@ -107,22 +100,6 @@ public partial class EtiquetasView : ContentPage
         {
             FiltrarPorNombrePedido(e.NewTextValue);
         }
-    }
-
-    private async void DetallePedido(object sender, EventArgs e)
-    {
-        var button = sender as Button;
-        var pedido = button?.BindingContext as Pedido;
-        if (pedido != null)
-        {
-            await Navigation.PushAsync(new DetallePedido(MainPageView, pedido));
-        }
-    }
-
-    public async Task VerDetallesCommand(Pedido pedido)
-    {
-        DetallePedido detallePage = new DetallePedido(MainPageView, pedido);
-        await Navigation.PushAsync(detallePage);
     }
 
     private async void Regresar(object sender, EventArgs e)

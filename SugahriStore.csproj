@@ -70,6 +70,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Resources\Fonts\QuicksandMedium500.ttf" />
+		<None Remove="Resources\Fonts\Quicksand_Bold.otf" />
+		<None Remove="Resources\Fonts\Starborn.otf" />
 		<None Remove="Resources\Images\fondo6.png" />
 	</ItemGroup>
 
@@ -123,6 +126,9 @@
 		<None Update="Resources\DatosEjemplo\PedidosEjemplo.csv">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Resources\ImagesView\fondoEtiquetas.jpg">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Resources\ImagesView\image1.jpeg">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
@@ -148,6 +154,18 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\Database\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiFont Update="Resources\Fonts\QuicksandMedium500.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Update="Resources\Fonts\Quicksand_Bold.otf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Update="Resources\Fonts\Starborn.otf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
 	</ItemGroup>
 
 </Project>

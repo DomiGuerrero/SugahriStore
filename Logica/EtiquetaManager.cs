@@ -7,9 +7,10 @@ namespace SugahriStore.Logica
     public static class EtiquetaManager
     {
         private static readonly ClienteRepositorio ClienteRepositorio = new ClienteRepositorio();
-        public static async void CrearEtiqueta(string RutaArchivo, string NombreArchivo, Pedido Pedido)
+
+        public static async void CrearEtiqueta(string RutaArchivo, Pedido Pedido)
         {
-            string rutaImagenFondo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images\\fondo2.jpg");
+            string rutaImagenFondo = Path.Combine(Path.Combine(AppContext.BaseDirectory, "Resources", "ImagesView\\fondoEtiquetas.jpg"));
             SKBitmap imagenFondo = SKBitmap.Decode(rutaImagenFondo);
 
             // Crear un nuevo lienzo SkiaSharp con las dimensiones de la imagen de fondo
@@ -23,7 +24,7 @@ namespace SugahriStore.Logica
 
             // Dibujar la información del pedido
             float textX = imagenFondo.Width / 2; // Centrar el texto horizontalmente
-            float textY = imagenFondo.Height / 2; // Centrar el texto verticalmente
+            float textY = imagenFondo.Height / 3.7f; // Centrar el texto verticalmente
 
             // Configurar el estilo del borde redondeado
             SKPaint borderPaint = new SKPaint
@@ -41,69 +42,77 @@ namespace SugahriStore.Logica
             Pedido.Cliente = ClienteRepositorio.ObtenerClientePorPedido(Pedido);
 
             // Dibujar la información del pedido
-            string nombre = Pedido.Cliente.Nombre + "\n";
-            string direccion = Pedido.Cliente.Direccion + "\n";
+            string nombre = Pedido.Cliente.Nombre;
+            string direccion = Pedido.Cliente.Direccion;
             string Pais = Pedido.Cliente.Ciudad;
 
             // Estilo del texto
-            SKTypeface typeface = SKTypeface.FromFamilyName("Arial", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright);
+            SKTypeface typeface = SKTypeface.FromFile(Path.Combine(AppContext.BaseDirectory, "Resources/Fonts/Starborn.otf"));
+
             SKPaint pedidoPaint = new SKPaint
             {
-                Color = new SKColor(0, 0, 128), // Color azul marino
-                TextSize = 480,
+                Color = new SKColor(220, 20, 60),
+                TextSize = GetScaledTextSize(imagenFondo, 0.1f),
                 TextAlign = SKTextAlign.Center,
                 Typeface = typeface,
                 IsAntialias = true
             };
 
-            SKPaint numeroPedidoPaint = new SKPaint
+            SKPaint direccionPaint = new SKPaint
             {
-                Color = SKColors.Black,
-                TextSize = 720,
+                Color = new SKColor(220, 20, 60),
+                TextSize = GetScaledTextSize(imagenFondo, 0.1f),
                 TextAlign = SKTextAlign.Center,
                 Typeface = typeface,
                 IsAntialias = true
             };
 
-            SKPaint fechaPaint = new SKPaint
+            SKPaint paisPaint = new SKPaint
             {
-                Color = SKColors.Black,
-                TextSize = 480,
+                Color = new SKColor(220, 20, 60),
+                TextSize = GetScaledTextSize(imagenFondo, 0.1f),
                 TextAlign = SKTextAlign.Center,
                 Typeface = typeface,
                 IsAntialias = true
             };
+
 
             // Calcular posiciones verticales de las líneas de texto
-            float pedidoY = textY - 75 + 60; // Posición vertical para la línea "Número de pedido:"
-            float numeroPedidoY = textY - 75 + 160; // Posición vertical para el número de pedido
-            float fechaY = textY + 75 - 60; // Posición vertical para la línea de fecha
+            float pedidoY = textY - 75 + GetScaledTextOffset(imagenFondo, 0.1f);
+            float direccionPedidoY = pedidoY + pedidoPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.02f);
+            float paisY = direccionPedidoY + direccionPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.1f);
 
-            // Dibujar texto en lienzo
             canvas.DrawText(nombre, textX, pedidoY, pedidoPaint);
 
-            // Calcular la posición vertical para el número de pedido en una nueva línea
-            numeroPedidoY = pedidoY + pedidoPaint.TextSize;
+            canvas.DrawText(direccion, textX, direccionPedidoY, direccionPaint);
 
-            canvas.DrawText(direccion, textX, numeroPedidoY, numeroPedidoPaint);
-
-            // Calcular la posición vertical para la línea de fecha en una nueva línea
-            fechaY = numeroPedidoY + numeroPedidoPaint.TextSize;
-
-            canvas.DrawText(Pais, textX, fechaY, fechaPaint);
+            canvas.DrawText(Pais, textX, paisY, paisPaint);
 
             // Exportar el lienzo como un archivo JPG 
             string rutaArchivo = RutaArchivo;
 
             using (var image = surface.Snapshot())
             using (var data = image.Encode(SKEncodedImageFormat.Jpeg, 100))
-            using (var stream = File.OpenWrite(rutaArchivo + "\\" + NombreArchivo + ".jpg"))
+            using (var stream = File.OpenWrite(rutaArchivo + "\\etiqueta_" + Pedido.Cliente.Nombre + ".jpg"))
             {
                 data.SaveTo(stream);
             }
 
-
         }
+        // Función para obtener el desplazamiento de texto escalado en base al tamaño de la imagen de fondo
+        private static float GetScaledTextOffset(SKBitmap background, float scaleFactor)
+        {
+            float maxOffset = Math.Min(background.Width, background.Height) * scaleFactor;
+            return maxOffset;
+        }
+        // Función para obtener el tamaño de texto escalado en base al tamaño de la imagen de fondo
+        private static float GetScaledTextSize(SKBitmap background, float scaleFactor)
+        {
+            float maxTextSize = Math.Min(background.Width, background.Height) * scaleFactor;
+            return maxTextSize;
+        }
+
+
     }
 }
 

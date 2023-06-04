@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SugahriStore.Datos;
 using SugahriStore.Modelos;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace SugahriStore;
 
@@ -22,6 +23,7 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("QuicksandMedium500.ttf", "QuickSandMedium500");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 

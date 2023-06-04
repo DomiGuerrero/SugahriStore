@@ -4,6 +4,8 @@ using SugahriStore.Logica;
 using SugahriStore.Modelos;
 using System.Collections.ObjectModel;
 
+
+
 namespace SugahriStore.Vistas;
 
 public partial class EtiquetasView : ContentPage
@@ -38,6 +40,7 @@ public partial class EtiquetasView : ContentPage
         // Inicializar la lista de pedidos seleccionados
         PedidosSeleccionados = new ObservableCollection<Pedido>();
     }
+
     private void Seleccionar(object sender, CheckedChangedEventArgs e)
     {
         var checkBox = sender as CheckBox;
@@ -59,26 +62,51 @@ public partial class EtiquetasView : ContentPage
     }
     private async void ExportarSeleccionados(object sender, EventArgs e)
     {
-        var folder = await FolderPicker.PickAsync(default);
-
-        string direccion = $"{folder.Folder.Path}";
-        // Obtén una lista de los pedidos seleccionados que se van a borrar
-        var pedidosABorrar = PedidosSeleccionados.ToList();
-        if (pedidosABorrar.Count != 0)
+        try
         {
+            var folder = await FolderPicker.PickAsync(default);
 
-            for (int i = 0; i < PedidosSeleccionados.Count; i++)
+            if (folder != null && folder.Folder != null) // Verifica si se seleccionó una carpeta y si tiene una ruta válida
             {
-                EtiquetaManager.CrearEtiqueta(direccion, Pedidos[i]);
-            }
-            DisplayAlert("Éxito", "Etiquetas exportadas correctamente", "Aceptar");
-        }
-        else
-        {
-            DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
-        }
+                string direccion = $"{folder.Folder.Path}";
 
+                // Obtén una lista de los pedidos seleccionados que se van a borrar
+                var pedidosABorrar = PedidosSeleccionados.ToList();
+                if (pedidosABorrar.Count != 0)
+                {
+                    progressBar.IsVisible = true;
+
+                    await Task.Run(async () =>
+                    {
+                        for (int i = 0; i < PedidosSeleccionados.Count; i++)
+                        {
+                            await EtiquetaManager.CrearEtiqueta(direccion, Pedidos[i]);
+
+                            // Actualiza el progreso del ProgressBar en el hilo de trabajo
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                progressBar.Progress = (double)(i + 1) / PedidosSeleccionados.Count;
+                            });
+                        }
+                    });
+
+                    progressBar.IsVisible = false;
+
+                    await DisplayAlert("Éxito", "Etiquetas exportadas correctamente", "Aceptar");
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Maneja la excepción y muestra un mensaje adecuado al usuario
+            await DisplayAlert("Error", "Ocurrió un error al seleccionar la carpeta", "Aceptar");
+        }
     }
+
 
     private void FiltrarPorNombrePedido(string filtro)
     {

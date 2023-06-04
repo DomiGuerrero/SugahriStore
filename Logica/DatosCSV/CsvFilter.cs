@@ -121,27 +121,30 @@ public static class CsvManagement
 
             foreach (var pedido in pedidos)
             {
-                bool isFirstLine = true;
-                foreach (var lineaPedido in pedido.LineasPedido)
+                if (pedido.LineasPedido != null && pedido.LineasPedido.Count > 0)
                 {
-                    csv.WriteField(pedido.Nombre);
-                    csv.WriteField(pedido.Email);
-                    csv.WriteField(isFirstLine ? pedido.Estado : "");
-                    csv.WriteField(isFirstLine ? pedido.EstadoDeEnvio : "");
-                    csv.WriteField(isFirstLine ? pedido.Divisa : "");
-                    csv.WriteField(isFirstLine ? pedido.Total.ToString(CultureInfo.InvariantCulture) : "");
+                    bool isFirstLine = true;
+                    foreach (var lineaPedido in pedido.LineasPedido)
+                    {
+                        csv.WriteField(pedido.Nombre);
+                        csv.WriteField(pedido.Email);
+                        csv.WriteField(isFirstLine ? pedido.Estado : "");
+                        csv.WriteField(isFirstLine ? pedido.EstadoDeEnvio : "");
+                        csv.WriteField(isFirstLine ? pedido.Divisa : "");
+                        csv.WriteField(isFirstLine ? pedido.Total.ToString(CultureInfo.InvariantCulture) : "");
 
-                    // Escribir los campos específicos de la línea de pedido
-                    csv.WriteField(lineaPedido.Nombre);
-                    csv.WriteField(lineaPedido.Precio.ToString(CultureInfo.InvariantCulture));
-                    csv.WriteField(lineaPedido.Cantidad);
-                    csv.WriteField(isFirstLine ? pedido.Cliente.Nombre : "");
-                    csv.WriteField(isFirstLine ? pedido.Cliente.Direccion : "");
-                    csv.WriteField(isFirstLine ? pedido.Cliente.Ciudad : "");
+                        // Escribir los campos específicos de la línea de pedido
+                        csv.WriteField(lineaPedido.Nombre);
+                        csv.WriteField(lineaPedido.Precio.ToString(CultureInfo.InvariantCulture));
+                        csv.WriteField(lineaPedido.Cantidad);
+                        csv.WriteField(isFirstLine ? pedido.Cliente.Nombre : "");
+                        csv.WriteField(isFirstLine ? pedido.Cliente.Direccion : "");
+                        csv.WriteField(isFirstLine ? pedido.Cliente.Ciudad : "");
 
-                    csv.NextRecord();
+                        csv.NextRecord();
 
-                    isFirstLine = false;
+                        isFirstLine = false;
+                    }
                 }
             }
         }

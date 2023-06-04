@@ -8,7 +8,7 @@ namespace SugahriStore.Logica
     {
         private static readonly ClienteRepositorio ClienteRepositorio = new ClienteRepositorio();
 
-        public static async void CrearEtiqueta(string RutaArchivo, Pedido Pedido)
+        public static async Task CrearEtiqueta(string RutaArchivo, Pedido Pedido)
         {
             string rutaImagenFondo = Path.Combine(Path.Combine(AppContext.BaseDirectory, "Resources", "ImagesView\\fondoEtiquetas.jpg"));
             SKBitmap imagenFondo = SKBitmap.Decode(rutaImagenFondo);
@@ -47,7 +47,7 @@ namespace SugahriStore.Logica
             string Pais = Pedido.Cliente.Ciudad;
 
             // Estilo del texto
-            SKTypeface typeface = SKTypeface.FromFile(Path.Combine(AppContext.BaseDirectory, "Resources/Fonts/Starborn.otf"));
+            SKTypeface typeface = SKTypeface.FromFile(Path.Combine(AppContext.BaseDirectory, "Resources/Fonts/QuicksandMedium500.ttf"));
 
             SKPaint pedidoPaint = new SKPaint
             {

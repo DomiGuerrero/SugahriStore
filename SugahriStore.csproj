@@ -107,6 +107,12 @@
 		<MauiXaml Update="Vistas\MainPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Vistas\ModificarUsuariosAdminView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Vistas\NewPage1.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Vistas\PedidosView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -114,6 +120,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Vistas\RegistroView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Vistas\RegistroUsuariosAdminView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Vistas\UsuariosView.xaml">
@@ -156,6 +165,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\Database\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Vistas\RegistroUsuariosAdminView.xaml.cs">
+	    <DependentUpon>RegistroUsuariosAdminView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>

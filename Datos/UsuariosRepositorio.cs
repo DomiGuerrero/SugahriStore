@@ -23,11 +23,12 @@ namespace SugahriStore.Datos
             context.Usuarios.Add(usuario);
             context.SaveChanges();
         }
+        //Método que verifica si un usuario está registrado en la base de datos
         public bool UsuarioRegistrado(string nombre)
         {
             return context.Usuarios.Any(u => u.Nombre == nombre);
         }
-
+        //Método para obtener todos los usuarios de la base de datos
         public List<Usuario> ObtenerUsuarios()
         {
             return context.Usuarios.ToList();

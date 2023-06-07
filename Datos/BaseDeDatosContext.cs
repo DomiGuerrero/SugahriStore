@@ -9,6 +9,8 @@ namespace SugahriStore.Datos
     public class BaseDeDatosContext : DbContext
     {
         private static readonly string DatabasePath = Path.Combine(AppContext.BaseDirectory, "Resources", "Database", "dbSqlite.db");
+
+        // DbSets que representan las tablas de la base de datos
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<LineaPedido> LineasPedido { get; set; }
         public DbSet<Producto> Productos { get; set; }
@@ -19,10 +21,12 @@ namespace SugahriStore.Datos
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // Configuración de SQLite como proveedor de la base de datos
             string connectionString = $"Data Source={DatabasePath}";
             optionsBuilder.UseSqlite(connectionString: connectionString,
                 sqliteOptionsAction: op =>
                 {
+                    // Se especifica la ubicación de las migraciones
                     op.MigrationsAssembly(
                         Assembly.GetExecutingAssembly().FullName
                         );
@@ -32,6 +36,8 @@ namespace SugahriStore.Datos
             base.OnConfiguring(optionsBuilder);
 
         }
+
+        // Método para realizar el hash de una contraseña utilizando SHA256
         private static string HashContraseña(string password)
         {
             byte[] hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
@@ -41,6 +47,8 @@ namespace SugahriStore.Datos
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Definición de las relaciones y configuración de las tablas
+
             modelBuilder.Entity<Pedido>().ToTable("Pedidos")
                 .HasMany(p => p.LineasPedido)
                 .WithOne(lp => lp.Pedido)
@@ -88,6 +96,8 @@ namespace SugahriStore.Datos
                 .HasMany(r => r.Usuarios)
                 .WithOne(u => u.Rol)
                 .HasForeignKey(u => u.RolId);
+
+            // Se agregan datos iniciales de usuarios y roles
             modelBuilder.Entity<Usuario>().HasData(
             new Usuario
             {
@@ -109,6 +119,5 @@ namespace SugahriStore.Datos
         {
             Database.EnsureCreated();
         }
-
     }
 }

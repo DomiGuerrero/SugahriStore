@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:SugahriStore"
-             x:Class="SugahriStore.MainPage"
-             Title="SugahriStore">
+             x:Class="SugahriStore.MainPage">
     <Grid>
         <Image Source="fondo2.jpg" Aspect="AspectFill" />
         <Grid>
@@ -35,10 +33,11 @@
                     </StackLayout>
                     <StackLayout  BackgroundColor="White">
                         <Button Text="Pedidos" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button1_Clicked" Margin="10,0,0,3" />
-                        <Button Text="Exportar-Importar" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button2_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Exportar/Importar" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button2_Clicked" Margin="10,0,0,3"/>
                         <Button Text="Etiquetas" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button3_Clicked" Margin="10,0,0,3"/>
                         <Button Text="Usuarios" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button4_Clicked" Margin="10,0,0,3"/>
                         <Button Text="Productos" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button5_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Cerrar Sesión" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button7_Clicked" Margin="10,0,0,3"/>
                         <Button Text="Salir" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button6_Clicked" Margin="10,0,0,3"/>
                     </StackLayout>
                 </StackLayout>

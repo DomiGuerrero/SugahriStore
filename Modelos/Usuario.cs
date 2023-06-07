@@ -10,9 +10,8 @@ namespace SugahriStore.Modelos
         private int id;
         private string nombre;
         private string contraseña;
-        public int RolId { get; set; } // clave foránea
-
-        public Rol Rol { get; set; } // navegación a la clase de roles
+        public int RolId { get; set; }
+        public Rol Rol { get; set; }
 
         public Usuario()
         {

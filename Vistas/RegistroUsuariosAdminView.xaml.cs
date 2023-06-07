@@ -1,19 +1,16 @@
 using SugahriStore.Datos;
 using SugahriStore.Modelos;
 
-namespace SugahriStore;
+namespace SugahriStore.Vistas;
 
-public partial class RegistroView : ContentPage
+public partial class RegistroUsuariosAdminView : ContentPage
 {
     private UsuariosRepositorio UsuariosRepositorio = new();
-    private RolesRepositorio RolesRepositorio = new();
-    private MainPage mainPage;
 
-    public RegistroView()
-    {
-        InitializeComponent();
-    }
-
+    public RegistroUsuariosAdminView()
+	{
+		InitializeComponent();
+	}
     private void Registro(object sender, EventArgs e)
     {
         // Verificar si los campos están vacíos
@@ -43,8 +40,11 @@ public partial class RegistroView : ContentPage
         }
         else
         {
-            // Crear un nuevo objeto de Usuario con los datos ingresados
-            Usuario usuario = new Usuario(NombreUsuario.Text, ContraseñaUsuario.Text, 2);
+            // Obtener el rol seleccionado del Switch
+            int rol = SwitchRol.IsToggled ? 1 : 2;
+
+            // Crear un nuevo objeto de Usuario con los datos ingresados y el rol correspondiente
+            Usuario usuario = new Usuario(NombreUsuario.Text, ContraseñaUsuario.Text, rol);
 
             // Agregar el usuario a la base de datos
             UsuariosRepositorio.AgregarUsuario(usuario);
@@ -52,10 +52,8 @@ public partial class RegistroView : ContentPage
             DisplayAlert("Registro Correcto", "Te registraste correctamente en la aplicación", "Aceptar");
 
             // Crear la página principal y pasar el usuario como parámetro
-            mainPage = new MainPage(usuario);
-            Navigation.PushAsync(mainPage);
+            Navigation.PopAsync();
         }
     }
 
 }
-

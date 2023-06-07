@@ -44,8 +44,17 @@ namespace SugahriStore.Vistas
         {
             var folder = await FolderPicker.PickAsync(default);
 
-            exportFilePathLabel.Text = $"{folder.Folder.Path}";
+            if (folder != null && folder.Folder != null)
+            {
+                exportFilePathLabel.Text = folder.Folder.Path;
+            }
+            else
+            {
+                await DisplayAlert("Error", "No se seleccionó ninguna carpeta.", "Aceptar");
+            }
         }
+
+
 
 
         private void OnExportClicked(object sender, EventArgs e)

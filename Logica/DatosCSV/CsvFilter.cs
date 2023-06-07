@@ -146,9 +146,18 @@ public static class CsvManagement
                         isFirstLine = false;
                     }
                 }
+                // Registrar la exportación en la tabla Auditorias
+                var auditoria = new Auditoria
+                {
+                    Fecha = DateTime.Now,
+                    NombrePedido = pedido.Nombre
+                };
+
+                AuditoriaRepositorio.AgregarAuditoria(auditoria);
             }
         }
     }
+
 
 
 
@@ -239,6 +248,7 @@ public static class CsvManagement
                     };
 
                     pedidoActual.LineasPedido.Add(lineaPedido);
+
                 }
 
                 // Agregar el último pedido actual a la lista de pedidos

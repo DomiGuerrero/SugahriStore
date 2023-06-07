@@ -17,6 +17,7 @@ public partial class MainPage : ContentPage
     private UsuariosView UsuariosView;
     private ImportView ImportView;
     private EtiquetasView EtiquetasView;
+    private LoginView LoginView;
 
     private RolesRepositorio RolesRepositorio = new();
     private Usuario Usuario { get; set; }
@@ -76,8 +77,12 @@ public partial class MainPage : ContentPage
     }
     private void Button4_Clicked(object sender, EventArgs e)
     {
+        if (Usuario.Rol.Nombre.Equals("ADMIN")){
         UsuariosView = new UsuariosView(this.Usuario, this);
         Navigation.PushAsync(UsuariosView);
+        }
+        else DisplayAlert("Acceso Restringido", "No puede acceder a esta funcionalidad sin permisos de administrador", "Aceptar");
+
 
     }
     private void Button5_Clicked(object sender, EventArgs e)
@@ -85,9 +90,25 @@ public partial class MainPage : ContentPage
         ProductosView = new ProductosView(this);
         Navigation.PushAsync(ProductosView);
     }
-    private void Button6_Clicked(object sender, EventArgs e)
+    private async void Button7_Clicked(object sender, EventArgs e)
     {
-        App.Current.Quit();
+        bool respuesta = await DisplayAlert("Confirmación", "¿Desea cerrar la sesión?", "Sí", "No");
+
+        if (respuesta)
+        {
+            LoginView = new LoginView();
+            await Navigation.PushAsync(LoginView);
+        }
+    }
+
+    private async  void Button6_Clicked(object sender, EventArgs e)
+    {
+        bool respuesta = await DisplayAlert("Confirmación", "¿Desea cerrar la aplicación?", "Sí", "No");
+
+        if (respuesta)
+        {
+            App.Current.Quit();
+        }
     }
 
     private void PreviousButton_Clicked(object sender, EventArgs e)

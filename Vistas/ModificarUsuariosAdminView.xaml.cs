@@ -15,9 +15,19 @@ public partial class ModificarUsuariosAdminView : ContentPage
 
         // Establecer los valores predeterminados de los campos con los datos del usuario recibido
         NombreUsuario.Text = UsuarioModificado.Nombre;
-        ContraseñaUsuario.Text = UsuarioModificado.Contraseña;
-        ConfirmarContraseña.Text = UsuarioModificado.Contraseña;
         SwitchRol.IsToggled = UsuarioModificado.RolId == 1 ? true : false;
+    }
+
+    private void SwitchRol_Toggled(object sender, ToggledEventArgs e)
+    {
+        if (e.Value)
+        {
+            textoRol.Text = "Admin";
+        }
+        else
+        {
+            textoRol.Text = "User";
+        }
     }
 
     private void Registro(object sender, EventArgs e)

@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SugahriStore.Datos;
-using SugahriStore.Modelos;
-using Syncfusion.Maui.Core.Hosting;
+
 
 namespace SugahriStore;
 

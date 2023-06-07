@@ -11,6 +11,18 @@ public partial class RegistroUsuariosAdminView : ContentPage
 	{
 		InitializeComponent();
 	}
+    private void SwitchRol_Toggled(object sender, ToggledEventArgs e)
+    {
+        if (e.Value)
+        {
+            textoRol.Text = "Admin";
+        }
+        else
+        {
+            textoRol.Text = "User";
+        }
+    }
+
     private void Registro(object sender, EventArgs e)
     {
         // Verificar si los campos están vacíos

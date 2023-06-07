@@ -36,13 +36,13 @@
                                FontSize="Medium"
                                VerticalOptions="CenterAndExpand"
                                HorizontalOptions="FillAndExpand" />
-                    <Button Text="Añadir Usuario"
+                    <Button Text="Insertar Usuario"
                             BackgroundColor="IndianRed"
                             TextColor="White"
                             CornerRadius="5"
                             Padding="10,5"
                             Margin="10,0,10,0"
-                            Clicked="AñadirUsuario"
+                            Clicked="InsertarUsuario"
                             VerticalOptions="Center"
                             HorizontalOptions="End" />
                 </StackLayout>

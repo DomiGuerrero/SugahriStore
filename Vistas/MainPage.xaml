@@ -62,8 +62,8 @@
                         </CarouselView>
                     </Frame>
                     <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Start" >
-                        <Button Text="Anterior" Clicked="PreviousButton_Clicked" BackgroundColor="#E87191" TextColor="White" CornerRadius="5" Padding="10" />
-                        <Button Text="Siguiente" Clicked="NextButton_Clicked" BackgroundColor="#E87191" TextColor="White" CornerRadius="5" Padding="10" />
+                        <Button Text="Anterior" Clicked="PreviousButton_Clicked" BackgroundColor="#ffb7c5" TextColor="White" CornerRadius="5" Padding="10" />
+                        <Button Text="Siguiente" Clicked="NextButton_Clicked" BackgroundColor="#ffb7c5" TextColor="White" CornerRadius="5" Padding="10" />
                     </StackLayout>
                     <Grid Grid.Row="1" Margin="75">
                         <Grid.ColumnDefinitions>

@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SugahriStore.Modelos;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SugahriStore.Datos
 {
@@ -18,17 +13,19 @@ namespace SugahriStore.Datos
             _context = new BaseDeDatosContext();
         }
 
+        // Agregar una nueva auditoría a la base de datos
         public void AgregarAuditoria(Auditoria auditoria)
         {
             _context.Auditorias.Add(auditoria);
             _context.SaveChanges();
         }
 
+        // Actualizar una auditoría en la base de datos
         public void ActualizarAuditoria(Auditoria auditoria)
         {
             try
             {
-                _context.Entry(auditoria).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(auditoria).State = EntityState.Modified;
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException ex)
@@ -38,24 +35,24 @@ namespace SugahriStore.Datos
             }
         }
 
-
-
+        // Eliminar una auditoría de la base de datos
         public void EliminarAuditoria(Auditoria auditoria)
         {
             _context.Auditorias.Remove(auditoria);
             _context.SaveChanges();
         }
 
+        // Obtener una auditoría por su ID
         public Auditoria ObtenerAuditoriaPorId(int id)
         {
             return _context.Auditorias.Find(id);
         }
 
+        // Obtener todas las auditorías de la base de datos
         public List<Auditoria> ObtenerTodasLasAuditorias()
         {
             return _context.Auditorias.ToList();
         }
     }
-
-
 }
+

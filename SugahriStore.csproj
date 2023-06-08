@@ -70,15 +70,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Resources\Fonts\QuicksandMedium500.ttf" />
+		<None Remove="Resources\Fonts\Quicksand_Bold.otf" />
+		<None Remove="Resources\Fonts\Starborn.otf" />
 		<None Remove="Resources\Images\fondo6.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+		<PackageReference Include="CsvHelper" Version="30.0.1" />
 		<PackageReference Include="EntityFramework" Version="6.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
+		<PackageReference Include="SkiaSharp" Version="2.88.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -87,6 +93,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Vistas\DetalleProducto.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Vistas\EtiquetasView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Vistas\ImportView.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -97,6 +106,12 @@
 		<MauiXaml Update="Vistas\MainPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Vistas\ModificarUsuariosAdminView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Vistas\NewPage1.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Vistas\PedidosView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -104,6 +119,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Vistas\RegistroView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Vistas\RegistroUsuariosAdminView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Vistas\UsuariosView.xaml">
@@ -117,6 +135,9 @@
 		</None>
 		<None Update="Resources\DatosEjemplo\PedidosEjemplo.csv">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\ImagesView\fondoEtiquetas.jpg">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="Resources\ImagesView\image1.jpeg">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -143,6 +164,24 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\Database\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Vistas\RegistroUsuariosAdminView.xaml.cs">
+	    <DependentUpon>RegistroUsuariosAdminView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiFont Update="Resources\Fonts\QuicksandMedium500.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Update="Resources\Fonts\Quicksand_Bold.otf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Update="Resources\Fonts\Starborn.otf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiFont>
 	</ItemGroup>
 
 </Project>

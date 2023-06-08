@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SugahriStore.Vistas.ImportView"
-             Title="ImportView">
+             x:Class="SugahriStore.Vistas.ImportView">
     <ContentPage.Resources>
         <Color x:Key="MainColor">#E87191</Color>
         <Color x:Key="AccentColor">#FFC4D6</Color>

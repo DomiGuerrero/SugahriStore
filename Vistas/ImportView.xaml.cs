@@ -25,17 +25,36 @@ namespace SugahriStore.Vistas
                 // Obtener la ruta del archivo seleccionado
                 string filePath = fileResult.FullPath;
 
+                // Verificar la extensión del archivo seleccionado
+                string fileExtension = Path.GetExtension(filePath);
+                if (fileExtension != ".csv")
+                {
+                    // Mostrar un mensaje de error si la extensión no es .csv
+                    await DisplayAlert("Error", "Seleccione un archivo con extensión .csv", "Aceptar");
+                    return;
+                }
+
                 // Mostrar la ruta del archivo importado en el label
                 importFilePathLabel.Text = filePath;
             }
         }
 
+
         private async void OnExportFileClicked(object sender, EventArgs e)
         {
             var folder = await FolderPicker.PickAsync(default);
 
-            exportFilePathLabel.Text = $"{folder.Folder.Path}";
+            if (folder != null && folder.Folder != null)
+            {
+                exportFilePathLabel.Text = folder.Folder.Path;
+            }
+            else
+            {
+                await DisplayAlert("Error", "No se seleccionó ninguna carpeta.", "Aceptar");
+            }
         }
+
+
 
 
         private void OnExportClicked(object sender, EventArgs e)
@@ -83,10 +102,19 @@ namespace SugahriStore.Vistas
                 string filePath = importFilePathLabel.Text;
 
                 List<Pedido> pedidos = CsvManagement.DeserializarPedidos(filePath);
-                this.PedidosRepositorio.InsertarPedidos(pedidos);
 
-                 // Mostrar un mensaje de éxito
-                 DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+                if (pedidos != null && pedidos.Count > 0)
+                {
+                    this.PedidosRepositorio.InsertarPedidos(pedidos);
+
+                    // Mostrar un mensaje de éxito
+                    DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+                }
+                else
+                {
+                    // Mostrar un mensaje de error si la lista de pedidos está vacía
+                    DisplayAlert("Error", "El archivo es incorrecto o está vacío", "Aceptar");
+                }
             }
             else
             {
@@ -94,7 +122,6 @@ namespace SugahriStore.Vistas
                 DisplayAlert("Error", "Por favor, selecciona un archivo para importar", "Aceptar");
             }
         }
-
 
     }
 }

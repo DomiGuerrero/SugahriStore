@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SugahriStore.Datos;
-using SugahriStore.Modelos;
+
 
 namespace SugahriStore;
 
@@ -12,7 +12,8 @@ public static class MauiProgram
     {
         using (var dbContext = new BaseDeDatosContext())
         {
-            dbContext.Database.EnsureCreated();
+            dbContext.Database.EnsureDeletedAsync();
+            dbContext.Database.EnsureCreatedAsync();
         }
         var builder = MauiApp.CreateBuilder();
         builder
@@ -21,6 +22,7 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("QuicksandMedium500.ttf", "QuickSandMedium500");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 

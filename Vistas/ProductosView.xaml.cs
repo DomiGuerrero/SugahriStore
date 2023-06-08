@@ -2,10 +2,7 @@ using SugahriStore.Datos;
 using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Modelos;
 using SugahriStore.Vistas;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+
 
 namespace SugahriStore;
 
@@ -60,11 +57,58 @@ public partial class ProductosView : ContentPage
         var producto = button?.BindingContext as Producto;
         if (producto != null)
         {
-            Navigation.PushAsync(new DetalleProducto(producto,this));
+            Navigation.PushAsync(new DetalleProducto(producto, this));
         }
     }
     private async void Regresar(object sender, EventArgs e)
     {
         await MainPageView.Navigation.PopAsync();
     }
+    private async void Insertar(object sender, EventArgs e)
+    {
+        var fileResult = await FilePicker.PickAsync();
+        string filePath = "";
+        if (fileResult != null)
+        {
+            // Obtener la ruta del archivo seleccionado
+            filePath = fileResult.FullPath;
+
+            // Verificar la extensión del archivo seleccionado
+            string fileExtension = Path.GetExtension(filePath);
+            if (fileExtension != ".csv")
+            {
+                // Mostrar un mensaje de error si la extensión no es .csv
+                await DisplayAlert("Error", "Seleccione un archivo con extensión .csv", "Aceptar");
+                return;
+            }
+        }
+        // Validar si se ha seleccionado un archivo para importar
+        if (!string.IsNullOrEmpty(filePath))
+        {
+            // Obtener la ruta del archivo importado
+            List<Producto> productos = CsvManagement.DeserializarProductos(filePath);
+
+            if (productos != null && productos.Count > 0)
+            {
+                this.ProductosRepositorio.AgregarProductos(productos);
+                _productos = ProductosRepositorio.ObtenerTodos(); // Actualizar la lista _productos
+                _productosFiltrados = new List<Producto>(_productos); // Crear una nueva instancia de lista
+                OnPropertyChanged(nameof(Productos)); // Notificar el cambio a la interfaz
+
+                // Mostrar un mensaje de éxito
+                await DisplayAlert("Éxito", "Archivo importado correctamente", "Aceptar");
+            }
+            else
+            {
+                // Mostrar un mensaje de error si la lista de pedidos está vacía
+                await DisplayAlert("Error", "El archivo es incorrecto o está vacío", "Aceptar");
+            }
+        }
+        else
+        {
+            // Mostrar un mensaje de error si no se ha seleccionado un archivo para importar
+            await DisplayAlert("Error", "Por favor, selecciona un archivo para importar", "Aceptar");
+        }
+    }
+
 }

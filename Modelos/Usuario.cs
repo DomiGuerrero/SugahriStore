@@ -7,16 +7,16 @@ namespace SugahriStore.Modelos
 {
     public class Usuario
     {
-        private readonly int id;
+        private int id;
         private string nombre;
         private string contraseña;
-        public int RolId { get; set; } // clave foránea
-
-        public Rol Rol { get; set; } // navegación a la clase de roles
+        public int RolId { get; set; }
+        public Rol Rol { get; set; }
 
         public Usuario()
         {
         }
+
         public Usuario(string nombre, string contraseña, int rolId)
         {
             Nombre = nombre;
@@ -29,10 +29,11 @@ namespace SugahriStore.Modelos
             get { return nombre; }
             set { nombre = value; }
         }
+
         public int Id
         {
             get { return id; }
-            
+            set { id = value; } // Agregado el setter para Id
         }
 
         public string Contraseña
@@ -41,4 +42,5 @@ namespace SugahriStore.Modelos
             set { contraseña = value; }
         }
     }
+
 }

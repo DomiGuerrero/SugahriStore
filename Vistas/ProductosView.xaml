@@ -6,11 +6,11 @@
             <StackLayout Orientation="Horizontal"
                          BackgroundColor="#FFF2F6"
                          Margin="0,0,0,10"
-                         Padding="5">
+                         Padding="5" >
                 <Button Text="Volver"
                         BackgroundColor="#ffb7c5"
-                        CornerRadius="0"
-                        Padding="15,25,10,25"
+                        CornerRadius="5"
+                        Margin="0,0,10,0"
                         Clicked="Regresar"
                         FontFamily="Montserrat"
                         FontSize="Medium"
@@ -26,6 +26,16 @@
                            VerticalOptions="StartAndExpand"
                            HorizontalOptions="FillAndExpand"
                            TextChanged="CambioDeTexto" />
+                <Button Text="Importar Productos"
+                        BackgroundColor="#ffb7c5"
+                        CornerRadius="5"
+                        Margin="0,0,10,0"
+                        Clicked="Insertar"
+                        FontFamily="Montserrat"
+                        FontSize="Medium"
+                        TextColor="White"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start" />
             </StackLayout>
             <ListView ItemsSource="{Binding Path=Productos}"
                       Margin="10"
@@ -45,7 +55,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding ImageUrl, FallbackValue='placeholder.jpg'}" 
+                                <Image Source="{Binding ImageUrl, FallbackValue='placeholder.jpg'}"
                                        Grid.Row="0"
                                        Grid.Column="0"
                                        Aspect="AspectFit"
@@ -77,7 +87,7 @@
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         BackgroundColor="#ffb7c5"
-                                        CornerRadius="0"
+                                        CornerRadius="5"
                                         Padding="15,25,10,25"
                                         Clicked="Detalles_Clicked"
                                         FontFamily="Montserrat"

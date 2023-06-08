@@ -3,15 +3,31 @@ using SugahriStore.Modelos;
 
 namespace SugahriStore;
 
-public partial class RegistroView : ContentPage
+public partial class ModificarUsuariosAdminView : ContentPage
 {
     private UsuariosRepositorio UsuariosRepositorio = new();
-    private RolesRepositorio RolesRepositorio = new();
-    private MainPage mainPage;
+    private Usuario UsuarioModificado;
 
-    public RegistroView()
+    public ModificarUsuariosAdminView(Usuario Usuario)
     {
+        UsuarioModificado = Usuario;
         InitializeComponent();
+
+        // Establecer los valores predeterminados de los campos con los datos del usuario recibido
+        NombreUsuario.Text = UsuarioModificado.Nombre;
+        SwitchRol.IsToggled = UsuarioModificado.RolId == 1 ? true : false;
+    }
+
+    private void SwitchRol_Toggled(object sender, ToggledEventArgs e)
+    {
+        if (e.Value)
+        {
+            textoRol.Text = "Admin";
+        }
+        else
+        {
+            textoRol.Text = "User";
+        }
     }
 
     private void Registro(object sender, EventArgs e)
@@ -43,19 +59,21 @@ public partial class RegistroView : ContentPage
         }
         else
         {
-            // Crear un nuevo objeto de Usuario con los datos ingresados
-            Usuario usuario = new Usuario(NombreUsuario.Text, ContraseñaUsuario.Text, 2);
+            // Obtener el rol seleccionado del Switch
+            int rol = SwitchRol.IsToggled ? 1 : 2;
 
-            // Agregar el usuario a la base de datos
-            UsuariosRepositorio.AgregarUsuario(usuario);
+            // Actualizar los datos del usuario existente con los nuevos valores ingresados
+            UsuarioModificado.Nombre = NombreUsuario.Text;
+            UsuarioModificado.Contraseña = ContraseñaUsuario.Text;
+            UsuarioModificado.RolId = rol;
 
-            DisplayAlert("Registro Correcto", "Te registraste correctamente en la aplicación", "Aceptar");
+            // Actualizar el usuario en la base de datos
+            UsuariosRepositorio.ActualizarUsuario(UsuarioModificado,ContraseñaUsuario.Text);
 
-            // Crear la página principal y pasar el usuario como parámetro
-            mainPage = new MainPage(usuario);
-            Navigation.PushAsync(mainPage);
+            DisplayAlert("Actualización Correcta", "Se ha actualizado correctamente el usuario", "Aceptar");
+
+            // Volver a la página anterior
+            Navigation.PopAsync();
         }
     }
-
 }
-

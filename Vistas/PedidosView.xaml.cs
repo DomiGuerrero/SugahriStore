@@ -55,34 +55,36 @@ namespace SugahriStore
                 }
             }
         }
-        private void BorrarSeleccionados(object sender, EventArgs e)
+
+        private async void BorrarSeleccionados(object sender, EventArgs e)
         {
             // Obtén una lista de los pedidos seleccionados que se van a borrar
             var pedidosABorrar = PedidosSeleccionados.ToList();
             if (pedidosABorrar.Count != 0)
             {
-
-                // Borrar los pedidos de la base de datos
-                foreach (var pedido in pedidosABorrar)
+                bool confirmacion = await DisplayAlert("Confirmación", "¿Estás seguro de que deseas borrar los pedidos seleccionados?", "Sí", "No");
+                if (confirmacion)
                 {
-                    PedidosRepositorio.BorrarPedido(pedido);
+                    // Borrar los pedidos de la base de datos
+                    foreach (var pedido in pedidosABorrar)
+                    {
+                        PedidosRepositorio.BorrarPedido(pedido);
+                    }
+
+                    // Borrar los pedidos de la lista local
+                    _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
+
+                    // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
+                    Pedidos = _pedidos.ToList();
+                    PedidosSeleccionados.Clear();
+                    await DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
                 }
-
-                // Borrar los pedidos de la lista local
-                _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
-
-                // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
-                Pedidos = _pedidos.ToList();
-                PedidosSeleccionados.Clear();
-                DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
             }
             else
             {
-                DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
+                await DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
             }
-
         }
-
 
         private void FiltrarPorNombrePedido(string filtro)
         {

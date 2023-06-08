@@ -32,7 +32,6 @@
             <Setter Property="HasShadow" Value="True" />
         </Style>
     </ContentPage.Resources>
-
     <ContentPage.Content>
         <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="{StaticResource BackgroundColor}">
             <Grid.ColumnDefinitions>

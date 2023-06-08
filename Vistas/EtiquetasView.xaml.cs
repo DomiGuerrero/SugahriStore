@@ -71,28 +71,32 @@ public partial class EtiquetasView : ContentPage
                 string direccion = $"{folder.Folder.Path}";
 
                 // Obtén una lista de los pedidos seleccionados que se van a borrar
-                var pedidosABorrar = PedidosSeleccionados.ToList();
-                if (pedidosABorrar.Count != 0)
+                var pedidosAExportar = PedidosSeleccionados.ToList();
+                if (pedidosAExportar.Count != 0)
                 {
-                    progressBar.IsVisible = true;
-
-                    await Task.Run(async () =>
+                    bool confirmacion = await DisplayAlert("Confirmación", $"¿Estás seguro de que deseas exportar {pedidosAExportar.Count} etiquetas?\n\nEsto puede tardar aproximadamente {pedidosAExportar.Count * 1.2857} segundos.", "Sí", "No");
+                    if (confirmacion)
                     {
-                        for (int i = 0; i < PedidosSeleccionados.Count; i++)
+                        progressBar.IsVisible = true;
+
+                        await Task.Run(async () =>
                         {
-                            await EtiquetaManager.CrearEtiqueta(direccion, Pedidos[i]);
-
-                            // Actualiza el progreso del ProgressBar en el hilo de trabajo
-                            Device.BeginInvokeOnMainThread(() =>
+                            for (int i = 0; i < PedidosSeleccionados.Count; i++)
                             {
-                                progressBar.Progress = (double)(i + 1) / PedidosSeleccionados.Count;
-                            });
-                        }
-                    });
+                                await EtiquetaManager.CrearEtiqueta(direccion, Pedidos[i]);
 
-                    progressBar.IsVisible = false;
+                                // Actualiza el progreso del ProgressBar en el hilo de trabajo
+                                Device.BeginInvokeOnMainThread(() =>
+                                {
+                                    progressBar.Progress = (double)(i + 1) / PedidosSeleccionados.Count;
+                                });
+                            }
+                        });
 
-                    await DisplayAlert("Éxito", "Etiquetas exportadas correctamente", "Aceptar");
+                        progressBar.IsVisible = false;
+
+                        await DisplayAlert("Éxito", "Etiquetas exportadas correctamente", "Aceptar");
+                    }
                 }
                 else
                 {
@@ -106,6 +110,7 @@ public partial class EtiquetasView : ContentPage
             await DisplayAlert("Error", "Ocurrió un error al seleccionar la carpeta", "Aceptar");
         }
     }
+
 
 
     private void FiltrarPorNombrePedido(string filtro)

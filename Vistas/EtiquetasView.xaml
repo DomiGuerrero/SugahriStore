@@ -31,7 +31,7 @@
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand" />
             <Button Text="Exportar etiquetas"
-                    BackgroundColor="IndianRed"
+                    BackgroundColor="#ffb7c5"
                     TextColor="White"
                     CornerRadius="5"
                     Padding="10,5"

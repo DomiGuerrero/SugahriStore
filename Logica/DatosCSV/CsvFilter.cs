@@ -15,38 +15,60 @@ public static class CsvManagement
 {
     //private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
     private static readonly string rutaUsuarios = Path.Combine(AppContext.BaseDirectory, "Resources", "Users\\Usuarios.csv");
-    private static readonly string rutaProductos = Path.Combine(AppContext.BaseDirectory, "Resources", "Productos\\Productos.csv");
-    private static readonly string rutaPlaceholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
-    private static LineaPedidoRepositorio LineaPedidoRepositorio = new();
+    private static readonly string Placeholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
     private static AuditoriaRepositorio AuditoriaRepositorio = new();
-    private static ClienteRepositorio ClienteRepositorio = new();
 
-
-    public static List<Producto> DeserializarProductos()
+    public static List<Producto> DeserializarProductos(string rutaArchivo)
     {
-        List<Producto> productos = new();
+        List<Producto> productos = new List<Producto>();
 
-        using (StreamReader reader = new(rutaProductos))
+        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            reader.ReadLine();
-            while (!reader.EndOfStream)
+            Delimiter = ",",
+            HasHeaderRecord = true,
+            MissingFieldFound = null
+        };
+
+        using (var reader = new StreamReader(rutaArchivo))
+        using (var csv = new CsvReader(reader, csvConfig))
+        {
+            csv.Read();
+            csv.ReadHeader();
+
+            if (csv.HeaderRecord.Contains("Title") && csv.HeaderRecord.Contains("Variant Inventory Qty") &&
+                csv.HeaderRecord.Contains("Variant Price") && csv.HeaderRecord.Contains("Image Src"))
             {
-                string line = reader.ReadLine();
-                string[] fields = line.Split(',');
+                while (csv.Read())
+                {
+                    string nombre = csv.GetField<string>("Title");
+                    decimal? inventarioDecimal = csv.GetField<decimal?>("Variant Inventory Qty");
+                    int inventario = inventarioDecimal.HasValue ? (int)inventarioDecimal.Value : 0;
+                    decimal? costeDecimal = csv.GetField<decimal?>("Variant Price");
+                    decimal coste = costeDecimal.HasValue ? costeDecimal.Value : 0;
+                    string imageUrl = csv.GetField<string>("Image Src");
 
-                string nombre = fields[0];
-                int inventario = int.TryParse(fields[1], out int inv) ? inv : 0;
-                decimal coste = decimal.TryParse(fields[2], NumberStyles.Currency, CultureInfo.InvariantCulture, out decimal cst) ? cst : 0;
-                string imageUrl = !string.IsNullOrEmpty(fields[3]) ? fields[3] : rutaPlaceholder;
+                    string finalImageUrl = string.IsNullOrEmpty(imageUrl) ? Placeholder : imageUrl;
 
-                Producto producto = new(nombre, inventario, coste, imageUrl);
-
-                productos.Add(producto);
+                    // Verificar que el costo sea mayor que 0 antes de agregar el producto
+                    if (!string.IsNullOrEmpty(nombre)) { 
+                        if (coste > 0 )
+                        {
+                             Producto producto = new Producto(nombre, inventario, coste, finalImageUrl);
+                             productos.Add(producto);
+                         }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error: La cabecera del archivo CSV no es válida");
             }
         }
 
         return productos;
     }
+
+
     public static void SerializarProductos(List<Producto> productos, string rutaArchivo)
     {
         using StreamWriter writer = new(rutaArchivo + ".csv");
@@ -157,10 +179,6 @@ public static class CsvManagement
             }
         }
     }
-
-
-
-
 
     public static List<Pedido> DeserializarPedidos(string rutaArchivo)
     {

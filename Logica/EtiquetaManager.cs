@@ -76,7 +76,6 @@ namespace SugahriStore.Logica
                 IsAntialias = true
             };
 
-
             // Calcular posiciones verticales de las líneas de texto
             float pedidoY = textY - 75 + GetScaledTextOffset(imagenFondo, 0.1f);
             float direccionPedidoY = pedidoY + pedidoPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.02f);
@@ -97,7 +96,6 @@ namespace SugahriStore.Logica
             {
                 data.SaveTo(stream);
             }
-
         }
         // Función para obtener el desplazamiento de texto escalado en base al tamaño de la imagen de fondo
         private static float GetScaledTextOffset(SKBitmap background, float scaleFactor)
@@ -111,8 +109,6 @@ namespace SugahriStore.Logica
             float maxTextSize = Math.Min(background.Width, background.Height) * scaleFactor;
             return maxTextSize;
         }
-
-
     }
 }
 

@@ -36,20 +36,26 @@ namespace SugahriStore.Datos
                 _context.SaveChanges();
             }
         }
-        // Agregar una lista de productos a la base de datos
+        // Agrega una lista de productos a la base de datos, si esta repetido lo actualiza
         public void AgregarProductos(List<Producto> productos)
         {
             foreach (var producto in productos)
             {
-                var productoExistente = _context.Productos.FirstOrDefault(p => p.Id == producto.Id);
+                var productoExistente = _context.Productos.FirstOrDefault(p => p.Nombre.Equals(producto.Nombre));
                 if (productoExistente == null)
                 {
                     _context.Productos.Add(producto);
                 }
+                else
+                {
+                    productoExistente.Coste = producto.Coste;
+                    productoExistente.Inventario = producto.Inventario;
+                    productoExistente.ImageUrl = producto.ImageUrl;
+                }
             }
-
             _context.SaveChanges();
         }
+
 
         // Actualizar los datos de un producto existente en la base de datos
         public void Actualizar(Producto producto)

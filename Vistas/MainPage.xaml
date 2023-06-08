@@ -32,13 +32,13 @@
                         <Image Source="edit_logo.png" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
                     </StackLayout>
                     <StackLayout  BackgroundColor="White">
-                        <Button Text="Pedidos" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button1_Clicked" Margin="10,0,0,3" />
-                        <Button Text="Exportar/Importar" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button2_Clicked" Margin="10,0,0,3"/>
-                        <Button Text="Etiquetas" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button3_Clicked" Margin="10,0,0,3"/>
-                        <Button Text="Usuarios" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button4_Clicked" Margin="10,0,0,3"/>
-                        <Button Text="Productos" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button5_Clicked" Margin="10,0,0,3"/>
-                        <Button Text="Cerrar Sesión" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button7_Clicked" Margin="10,0,0,3"/>
-                        <Button Text="Salir" FontFamily="Montserrat" FontSize="Medium" TextColor="White" Clicked="Button6_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Pedidos"  FontSize="Medium" TextColor="White" Clicked="Button1_Clicked" Margin="10,0,0,3" />
+                        <Button Text="Exportar/Importar"  FontSize="Medium" TextColor="White" Clicked="Button2_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Etiquetas" FontSize="Medium" TextColor="White" Clicked="Button3_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Usuarios" FontSize="Medium" TextColor="White" Clicked="Button4_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Productos" FontSize="Medium" TextColor="White" Clicked="Button5_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Cerrar Sesión" FontSize="Medium" TextColor="White" Clicked="Button7_Clicked" Margin="10,0,0,3"/>
+                        <Button Text="Salir"  FontSize="Medium" TextColor="White" Clicked="Button6_Clicked" Margin="10,0,0,3"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

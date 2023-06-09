@@ -33,7 +33,7 @@
                         <Switch x:Name="SwitchRol" HorizontalOptions="Center" Toggled="SwitchRol_Toggled" Grid.Column="2" />
                         <Label x:Name="textoRol" Text="User" TextColor="DarkSlateGrey" FontSize="Medium" VerticalOptions="Center" Grid.Column="1" />
                     </Grid>
-                    <Button Text="Registrarse" FontSize="Medium" TextColor="White" BackgroundColor="#ff8a80" CornerRadius="5" Padding="15,25" HorizontalOptions="FillAndExpand" Clicked="Registro"/>
+                    <Button Text="Registrar" FontSize="Medium" TextColor="White" BackgroundColor="#ff8a80" CornerRadius="5" Padding="15,25" HorizontalOptions="FillAndExpand" Clicked="Registro"/>
                 </StackLayout>
             </Grid>
         </Grid>

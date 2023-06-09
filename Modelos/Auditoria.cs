@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SugahriStore.Modelos
 {
     public class Auditoria
     {
-        public int Id { get; set; }
-        public DateTime Fecha { get; set; }
-        public string NombrePedido { get; set; }
-
+        public int Id { get; set; } // Identificador único de la auditoría
+        public DateTime Fecha { get; set; } // Fecha en la que se realizó la auditoría
+        public string NombrePedido { get; set; } // Nombre del pedido asociado a la auditoría
     }
+
 }

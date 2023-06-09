@@ -2,44 +2,45 @@
 using CsvHelper.Configuration;
 using SugahriStore.Datos;
 using SugahriStore.Modelos;
-using SugahriStore.Repositorios;
-using System.Formats.Asn1;
 using System.Globalization;
-using System.Net.NetworkInformation;
-using static System.Net.WebRequestMethods;
+
 
 namespace SugahriStore.Lógica.DatosCSV;
 
-//Generaremos la lista de productos del CSV extraido de la tienda 
 public static class CsvManagement
 {
-    //private static readonly string rutaPedidos = Path.Combine(AppContext.BaseDirectory, "Resources", "DatosEjemplo\\PedidosEjemplo.csv");
-    private static readonly string rutaUsuarios = Path.Combine(AppContext.BaseDirectory, "Resources", "Users\\Usuarios.csv");
+
     private static readonly string Placeholder = "https://i.etsystatic.com/isla/69d1eb/46127016/isla_500x500.46127016_qr9ms8u7.jpg?version=0";
     private static AuditoriaRepositorio AuditoriaRepositorio = new();
 
     public static List<Producto> DeserializarProductos(string rutaArchivo)
     {
+        // Crear una lista vacía para almacenar los productos
         List<Producto> productos = new List<Producto>();
 
+        // Configuración del CSV
         var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            Delimiter = ",",
-            HasHeaderRecord = true,
-            MissingFieldFound = null
+            Delimiter = ",",                        // Delimitador de campos
+            HasHeaderRecord = true,                  // Indica si el archivo tiene una línea de encabezado
+            MissingFieldFound = null                 // Acción a realizar si se encuentra un campo faltante (ninguna en este caso)
         };
 
+        // Abrir el archivo para leer
         using (var reader = new StreamReader(rutaArchivo))
         using (var csv = new CsvReader(reader, csvConfig))
         {
-            csv.Read();
-            csv.ReadHeader();
+            csv.Read();                             // Saltar la primera línea (normalmente el encabezado)
+            csv.ReadHeader();                       // Leer la línea de encabezado
 
+            // Verificar si los encabezados necesarios están presentes
             if (csv.HeaderRecord.Contains("Title") && csv.HeaderRecord.Contains("Variant Inventory Qty") &&
                 csv.HeaderRecord.Contains("Variant Price") && csv.HeaderRecord.Contains("Image Src"))
             {
+                // Leer cada línea del archivo
                 while (csv.Read())
                 {
+                    // Obtener los valores de los campos de la línea actual
                     string nombre = csv.GetField<string>("Title");
                     decimal? inventarioDecimal = csv.GetField<decimal?>("Variant Inventory Qty");
                     int inventario = inventarioDecimal.HasValue ? (int)inventarioDecimal.Value : 0;
@@ -47,15 +48,18 @@ public static class CsvManagement
                     decimal coste = costeDecimal.HasValue ? costeDecimal.Value : 0;
                     string imageUrl = csv.GetField<string>("Image Src");
 
+                    // Si la URL de la imagen está vacía, asignar un marcador de posición
                     string finalImageUrl = string.IsNullOrEmpty(imageUrl) ? Placeholder : imageUrl;
 
-                    // Verificar que el costo sea mayor que 0 antes de agregar el producto
-                    if (!string.IsNullOrEmpty(nombre)) { 
-                        if (coste > 0 )
+                    // Verificar que el nombre no esté vacío y que el costo sea mayor que 0 antes de agregar el producto
+                    if (!string.IsNullOrEmpty(nombre))
+                    {
+                        if (coste > 0)
                         {
-                             Producto producto = new Producto(nombre, inventario, coste, finalImageUrl);
-                             productos.Add(producto);
-                         }
+                            // Crear un nuevo objeto Producto y agregarlo a la lista
+                            Producto producto = new Producto(nombre, inventario, coste, finalImageUrl);
+                            productos.Add(producto);
+                        }
                     }
                 }
             }
@@ -65,68 +69,48 @@ public static class CsvManagement
             }
         }
 
-        return productos;
+        return productos;   // Devolver la lista de productos
     }
-
 
     public static void SerializarProductos(List<Producto> productos, string rutaArchivo)
     {
+        // Abrir el archivo para escribir
         using StreamWriter writer = new(rutaArchivo + ".csv");
+
+        // Escribir el encabezado en el archivo
         writer.WriteLine("Handle,Variant Inventory Qty,Variant Price,Variant Image");
 
+        // Escribir cada producto en una línea del archivo
         foreach (Producto producto in productos)
         {
-            string nombre = producto.Nombre.Replace(",", "");
+            string nombre = producto.Nombre.Replace(",", "");    // Reemplazar las comas en el nombre del producto
             int inventario = producto.Inventario;
             decimal coste = producto.Coste;
             string imageUrl = producto.ImageUrl;
 
+            // Crear una línea con los valores del producto separados por comas
             string line = $"{nombre},{inventario},{coste},{imageUrl}";
+
+            // Escribir la línea en el archivo
             writer.WriteLine(line);
         }
     }
 
-    public static List<Usuario> DeserializarUsuarios()
-    {
-        List<Usuario> usuarios = new();
-        using (var reader = new StreamReader(rutaUsuarios))
-        {
-            string[] headers = reader.ReadLine().Split(','); // Leemos la cabecera del archivo
-            int nombreIndex = Array.IndexOf(headers, "Nombre");
-            int contraseñaIndex = Array.IndexOf(headers, "Contraseña");
-            int rolesIndex = Array.IndexOf(headers, "Roles");
-
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string[] fields = line.Split(',');
-                Rol rol = new()
-                {
-                    Nombre = fields[rolesIndex]
-                };
-                Usuario usuario = new()
-                {
-                    Nombre = fields[nombreIndex],
-                    Contraseña = fields[contraseñaIndex],
-                    Rol = rol
-                };
-                usuarios.Add(usuario);
-            }
-        }
-        return usuarios;
-    }
 
     public static void SerializarPedidos(List<Pedido> pedidos, string rutaArchivo)
     {
+        // Configuración del CSV
         var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            Delimiter = ",",
-            HasHeaderRecord = true
+            Delimiter = ",",                // Delimitador de campos
+            HasHeaderRecord = true          // Indica si el archivo tiene una línea de encabezado
         };
 
+        // Abrir el archivo para escribir
         using (var writer = new StreamWriter(rutaArchivo))
         using (var csv = new CsvWriter(writer, csvConfig))
         {
+            // Escribir los encabezados en la primera línea del archivo
             csv.WriteField("Name");
             csv.WriteField("Email");
             csv.WriteField("Financial Status");
@@ -141,13 +125,18 @@ public static class CsvManagement
             csv.WriteField("Shipping Country");
             csv.NextRecord();
 
+            // Iterar sobre cada pedido
             foreach (var pedido in pedidos)
             {
+                // Verificar si el pedido tiene líneas de pedido
                 if (pedido.LineasPedido != null && pedido.LineasPedido.Count > 0)
                 {
                     bool isFirstLine = true;
+
+                    // Iterar sobre cada línea de pedido del pedido actual
                     foreach (var lineaPedido in pedido.LineasPedido)
                     {
+                        // Escribir los campos del pedido en la línea actual
                         csv.WriteField(pedido.Nombre);
                         csv.WriteField(pedido.Email);
                         csv.WriteField(isFirstLine ? pedido.Estado : "");
@@ -168,6 +157,7 @@ public static class CsvManagement
                         isFirstLine = false;
                     }
                 }
+
                 // Registrar la exportación en la tabla Auditorias
                 var auditoria = new Auditoria
                 {
@@ -180,20 +170,23 @@ public static class CsvManagement
         }
     }
 
+
     public static List<Pedido> DeserializarPedidos(string rutaArchivo)
     {
         List<Pedido> pedidos = new List<Pedido>();
 
+        // Configuración del CSV
         var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            Delimiter = ",",
-            HasHeaderRecord = true,
-            MissingFieldFound = null
+            Delimiter = ",",                // Delimitador de campos
+            HasHeaderRecord = true,         // Indica si el archivo tiene una línea de encabezado
+            MissingFieldFound = null        // Configuración para campos faltantes
         };
 
         using (var reader = new StreamReader(rutaArchivo))
         using (var csv = new CsvReader(reader, csvConfig))
         {
+            // Leer y validar el encabezado del archivo
             csv.Read();
             csv.ReadHeader();
 
@@ -206,6 +199,7 @@ public static class CsvManagement
             {
                 Pedido pedidoActual = null;
 
+                // Leer y procesar cada línea del archivo
                 while (csv.Read())
                 {
                     string nombreActual = csv.GetField<string>("Name");
@@ -218,6 +212,7 @@ public static class CsvManagement
                             pedidos.Add(pedidoActual);
                         }
 
+                        // Obtener los valores del pedido y crear un nuevo objeto Pedido
                         decimal total;
                         string totalStr = csv.GetField<string>("Total");
 
@@ -266,7 +261,6 @@ public static class CsvManagement
                     };
 
                     pedidoActual.LineasPedido.Add(lineaPedido);
-
                 }
 
                 // Agregar el último pedido actual a la lista de pedidos
@@ -280,8 +274,7 @@ public static class CsvManagement
                 Console.WriteLine("Error: La cabecera del archivo CSV no es válida");
             }
         }
-
-        return pedidos;
+        return pedidos; //Devuelve la lista creada
     }
 
 }

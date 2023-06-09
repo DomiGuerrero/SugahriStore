@@ -1,4 +1,5 @@
-﻿using SugahriStore.Datos;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SugahriStore.Datos;
 using SugahriStore.Modelos;
 using SugahriStore.Repositorios;
 using System.Collections.ObjectModel;
@@ -15,19 +16,25 @@ namespace SugahriStore
         private PedidosRepositorio PedidosRepositorio = new();
 
         private MainPage MainPage;
+
+        // Propiedades del pedido
         public string NombrePedido => _pedido.Nombre;
         public string Estado => _pedido.Estado;
         public string Divisa => _pedido.Divisa;
         public decimal PrecioTotal => _pedido.Total;
 
+        // Colección observable de líneas de pedido
         public ObservableCollection<LineaPedido> LineasPedido { get; set; } = new ObservableCollection<LineaPedido>();
 
+        // Constructor de la clase
         public DetallePedido(MainPage mainPage, Pedido pedido)
         {
             MainPage = mainPage;
             InitializeComponent();
 
             _pedido = pedido;
+
+            // Obtener las líneas de pedido del repositorio y asignarlas al pedido actual
             _pedido.LineasPedido = this.LineaPedidoRepositorio.BuscarLineasPedidoPorPedido(pedido.Id);
 
             BindingContext = this;
@@ -54,7 +61,7 @@ namespace SugahriStore
             }
         }
 
-
+        // Método para guardar los cambios realizados en el pedido
         private void GuardarPedidoCommand(object sender, EventArgs e)
         {
             // Obtener los nuevos valores de las entradas
@@ -63,7 +70,7 @@ namespace SugahriStore
             string nuevaDivisa = DivisaEntry.Text;
             decimal nuevoPrecioTotal;
 
-            // Verificar que los campos no estén vacíos
+            // Verificar que los campos no estén vacíos y que el precio total sea un decimal válido
             if (string.IsNullOrWhiteSpace(nuevoNombrePedido) ||
                 string.IsNullOrWhiteSpace(nuevoEstado) ||
                 string.IsNullOrWhiteSpace(nuevaDivisa) ||
@@ -80,7 +87,7 @@ namespace SugahriStore
                 return;
             }
 
-            // Actualizar los campos del pedido
+            // Actualizar los campos del pedido con los nuevos valores
             _pedido.Nombre = nuevoNombrePedido;
             _pedido.Estado = nuevoEstado;
             _pedido.Divisa = nuevaDivisa;
@@ -93,13 +100,13 @@ namespace SugahriStore
             DisplayAlert("Éxito", "Pedido Actualizado Correctamente", "Aceptar");
         }
 
-
-
-
+        // Método para volver a la vista de Pedidos
         private async void Volver(object sender, EventArgs e)
         {
+            // Crear una instancia de la vista de Pedidos y volver a ella
             PedidosView pedidos = new PedidosView(MainPage);
             await Navigation.PushAsync(pedidos);
         }
     }
 }
+

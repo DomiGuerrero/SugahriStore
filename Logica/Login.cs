@@ -1,10 +1,7 @@
 ﻿using SugahriStore.Modelos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SugahriStore.Lógica
 {
@@ -17,14 +14,18 @@ namespace SugahriStore.Lógica
             string hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             return hash;
         }
-      
+        // Método para hacer el login del uusario
         public bool LoginUser(string nombreUsuario, string contraseña, Usuario usuario)
         {
+            // Generar el hash de la contraseña ingresada
             string hashcontraseña = HashContraseña(contraseña);
+
+            // Verificar si el nombre de usuario y la contraseña coinciden con el usuario proporcionado
             if (usuario.Nombre == nombreUsuario && usuario.Contraseña == hashcontraseña)
-                return true;
+                return true; // Si coinciden, se retorna verdadero
             else
-                return false;
+                return false; // Si no coinciden, se retorna falso
         }
+
     }
 }

@@ -12,7 +12,6 @@ public static class MauiProgram
     {
         using (var dbContext = new BaseDeDatosContext())
         {
-            dbContext.Database.EnsureDeletedAsync();
             dbContext.Database.EnsureCreatedAsync();
         }
         var builder = MauiApp.CreateBuilder();

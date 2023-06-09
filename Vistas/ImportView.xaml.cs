@@ -2,8 +2,6 @@ using CommunityToolkit.Maui.Storage;
 using SugahriStore.Datos;
 using SugahriStore.Lógica.DatosCSV;
 using SugahriStore.Modelos;
-using System;
-using System.IO;
 
 namespace SugahriStore.Vistas
 {
@@ -39,22 +37,23 @@ namespace SugahriStore.Vistas
             }
         }
 
-
         private async void OnExportFileClicked(object sender, EventArgs e)
         {
+            // Solicitar al usuario que seleccione una carpeta para exportar el archivo
             var folder = await FolderPicker.PickAsync(default);
 
+            // Verificar si se seleccionó una carpeta válida
             if (folder != null && folder.Folder != null)
             {
+                // Mostrar la ruta de la carpeta seleccionada en una etiqueta
                 exportFilePathLabel.Text = folder.Folder.Path;
             }
             else
             {
+                // Mostrar una alerta de error si no se seleccionó ninguna carpeta
                 await DisplayAlert("Error", "No se seleccionó ninguna carpeta.", "Aceptar");
             }
         }
-
-
 
 
         private void OnExportClicked(object sender, EventArgs e)

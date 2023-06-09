@@ -8,11 +8,11 @@ namespace SugahriStore;
 
 public partial class ProductosView : ContentPage
 {
-    public MainPage MainPageView;
-    private List<Producto> _productos;
-    private List<Producto> _productosFiltrados;
-    ProductosRepositorio ProductosRepositorio = new();
-    public List<Producto> Productos
+    public MainPage MainPageView; // Referencia a la MainPage
+    private List<Producto> _productos; // Lista de todos los productos
+    private List<Producto> _productosFiltrados; // Lista de productos filtrados
+    ProductosRepositorio ProductosRepositorio = new(); // Repositorio de productos
+    public List<Producto> Productos // Propiedad que devuelve los productos filtrados
     {
         get => _productosFiltrados;
         set
@@ -21,21 +21,24 @@ public partial class ProductosView : ContentPage
             OnPropertyChanged(nameof(Productos));
         }
     }
+
     public ProductosView(MainPage mainPage)
     {
         InitializeComponent();
-        _productos = ProductosRepositorio.ObtenerTodos();
-        _productosFiltrados = _productos;
-        MainPageView = mainPage;
+        _productos = ProductosRepositorio.ObtenerTodos(); // Obtener todos los productos desde el repositorio
+        _productosFiltrados = _productos; // Inicializar la lista de productos filtrados con todos los productos
+        MainPageView = mainPage; // Asignar la referencia a la MainPage
         BindingContext = this;
     }
+
     private void FiltrarPorNombreProducto(string filtro)
     {
+        // Filtrar la lista de productos por el nombre
         Productos = _productos.Where(p => p.Nombre.ToLower().Contains(filtro.ToLower())).ToList();
 
         if (!Productos.Any())
         {
-            Productos = _productos;
+            Productos = _productos; // Si no hay coincidencias, mostrar todos los productos
         }
     }
 
@@ -43,27 +46,29 @@ public partial class ProductosView : ContentPage
     {
         if (string.IsNullOrWhiteSpace(e.NewTextValue))
         {
-            Productos = _productos;
+            Productos = _productos; // Si el texto está vacío, mostrar todos los productos
         }
         else
         {
-            FiltrarPorNombreProducto(e.NewTextValue);
+            FiltrarPorNombreProducto(e.NewTextValue); // Filtrar por el texto ingresado
         }
-
     }
+
     private void Detalles_Clicked(object sender, EventArgs e)
     {
         var button = sender as Button;
         var producto = button?.BindingContext as Producto;
         if (producto != null)
         {
-            Navigation.PushAsync(new DetalleProducto(producto, this));
+            Navigation.PushAsync(new DetalleProducto(producto, this)); // Navegar a la página de detalles del producto
         }
     }
+
     private async void Regresar(object sender, EventArgs e)
     {
-        await MainPageView.Navigation.PopAsync();
+        await MainPageView.Navigation.PopAsync(); // Regresar a la página anterior (MainPage)
     }
+
     private async void Insertar(object sender, EventArgs e)
     {
         var fileResult = await FilePicker.PickAsync();
@@ -110,5 +115,4 @@ public partial class ProductosView : ContentPage
             await DisplayAlert("Error", "Por favor, selecciona un archivo para importar", "Aceptar");
         }
     }
-
 }

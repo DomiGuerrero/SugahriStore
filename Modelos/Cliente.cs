@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SugahriStore.Modelos
 {
     public class Cliente
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Direccion { get; set; }
-        public string Ciudad { get; set; }
+        public int Id { get; set; }  // Identificador único del cliente
+        public string Nombre { get; set; }  // Nombre del cliente
+        public string Direccion { get; set; }  // Dirección del cliente
+        public string Ciudad { get; set; }  // Ciudad del cliente
     }
+
+
 }

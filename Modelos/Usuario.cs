@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 namespace SugahriStore.Modelos
 {
     public class Usuario
     {
-        private int id;
-        private string nombre;
-        private string contraseña;
-        public int RolId { get; set; }
-        public Rol Rol { get; set; }
+        private int id; // Identificador del usuario
+        private string nombre; // Nombre del usuario
+        private string contraseña; // Contraseña del usuario
+        public int RolId { get; set; } // Identificador del rol asociado al usuario
+        public Rol Rol { get; set; } // Objeto Rol asociado al usuario
 
         public Usuario()
         {
@@ -27,20 +23,19 @@ namespace SugahriStore.Modelos
         public string Nombre
         {
             get { return nombre; }
-            set { nombre = value; }
+            set { nombre = value; } // Establece el nombre del usuario
         }
 
         public int Id
         {
             get { return id; }
-            set { id = value; } // Agregado el setter para Id
+            set { id = value; } // Establece el identificador del usuario
         }
 
         public string Contraseña
         {
             get { return contraseña; }
-            set { contraseña = value; }
+            set { contraseña = value; } // Establece la contraseña del usuario
         }
     }
-
 }

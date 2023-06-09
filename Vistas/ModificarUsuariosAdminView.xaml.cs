@@ -68,7 +68,7 @@ public partial class ModificarUsuariosAdminView : ContentPage
             UsuarioModificado.RolId = rol;
 
             // Actualizar el usuario en la base de datos
-            UsuariosRepositorio.ActualizarUsuario(UsuarioModificado,ContraseñaUsuario.Text);
+            UsuariosRepositorio.ActualizarUsuario(UsuarioModificado, ContraseñaUsuario.Text);
 
             DisplayAlert("Actualización Correcta", "Se ha actualizado correctamente el usuario", "Aceptar");
 

@@ -5,14 +5,16 @@ namespace SugahriStore.Vistas;
 
 public partial class RegistroUsuariosAdminView : ContentPage
 {
-    private UsuariosRepositorio UsuariosRepositorio = new();
+    private UsuariosRepositorio UsuariosRepositorio = new(); // Repositorio de usuarios
 
     public RegistroUsuariosAdminView()
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
+
     private void SwitchRol_Toggled(object sender, ToggledEventArgs e)
     {
+        // Cambiar el texto del rol según el estado del Switch
         if (e.Value)
         {
             textoRol.Text = "Admin";
@@ -63,9 +65,8 @@ public partial class RegistroUsuariosAdminView : ContentPage
 
             DisplayAlert("Registro Correcto", "Te registraste correctamente en la aplicación", "Aceptar");
 
-            // Crear la página principal y pasar el usuario como parámetro
+            // Volver a la página anterior
             Navigation.PopAsync();
         }
     }
-
 }

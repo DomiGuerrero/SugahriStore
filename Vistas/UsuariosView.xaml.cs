@@ -3,63 +3,70 @@ using SugahriStore.Modelos;
 using SugahriStore.Vistas;
 
 namespace SugahriStore;
-    public partial class UsuariosView : ContentPage
+public partial class UsuariosView : ContentPage
+{
+    // Variables de referencia a otras vistas y listas de usuarios
+    public MainPage MainPageView; // Referencia a la vista MainPage
+    public RegistroUsuariosAdminView AdminView; // Referencia a la vista RegistroUsuariosAdminView
+    public ModificarUsuariosAdminView ModificarUsuarioView; // Referencia a la vista ModificarUsuariosAdminView
+    private List<Usuario> _usuarios; // Lista de usuarios
+    private List<Usuario> _usuariosFiltrados; // Lista de usuarios filtrados
+    private UsuariosRepositorio UsuariosRepositorio = new UsuariosRepositorio(); // Repositorio de usuarios
+    private RolesRepositorio RolesRepositorio = new RolesRepositorio(); // Repositorio de roles
+
+    // Propiedad para obtener y establecer la lista de usuarios filtrados
+    public List<Usuario> Usuarios
     {
-        public MainPage MainPageView;
-        public RegistroUsuariosAdminView AdminView;
-        public ModificarUsuariosAdminView ModificarUsuarioView;
-        private List<Usuario> _usuarios;
-        private List<Usuario> _usuariosFiltrados;
-        private UsuariosRepositorio UsuariosRepositorio = new UsuariosRepositorio();
-        private RolesRepositorio RolesRepositorio = new RolesRepositorio();
-        private Usuario UsuarioRegistrado;
-        public List<Usuario> Usuarios
+        get => _usuariosFiltrados;
+        set
         {
-            get => _usuariosFiltrados;
-            set
-            {
-                _usuariosFiltrados = value;
-                OnPropertyChanged(nameof(Usuarios));
-            }
+            _usuariosFiltrados = value;
+            OnPropertyChanged(nameof(Usuarios));
         }
+    }
 
-        public UsuariosView(Usuario usuario, MainPage mainPage)
-        {
-            InitializeComponent();
-            UsuarioRegistrado = usuario;
-            _usuarios = UsuariosRepositorio.ObtenerUsuarios();
-            RolesRepositorio.RellenarRoles(_usuarios);
-            _usuariosFiltrados = _usuarios;
-            MainPageView = mainPage;
-            AdminView = new();
-            BindingContext = this;
-        }
+    public UsuariosView(Usuario usuario, MainPage mainPage)
+    {
+        InitializeComponent();
+        _usuarios = UsuariosRepositorio.ObtenerUsuarios();
+        RolesRepositorio.RellenarRoles(_usuarios);
+        _usuariosFiltrados = _usuarios;
+        MainPageView = mainPage;
+        AdminView = new();
+        BindingContext = this;
+    }
+
+    // Método para filtrar la lista de usuarios por nombre
     private void FiltrarPorNombre(string filtro)
-        {
-            Usuarios = _usuarios.Where(u => u.Nombre.ToLower().Contains(filtro.ToLower())).ToList();
+    {
+        Usuarios = _usuarios.Where(u => u.Nombre.ToLower().Contains(filtro.ToLower())).ToList();
 
-            if (!Usuarios.Any())
-            {
-                Usuarios = _usuarios;
-            }
-        }
-
-        private void CambioDeTexto(object sender, TextChangedEventArgs e)
+        if (!Usuarios.Any())
         {
-            if (string.IsNullOrWhiteSpace(e.NewTextValue))
-            {
-                Usuarios = _usuarios;
-            }
-            else
-            {
-                FiltrarPorNombre(e.NewTextValue);
-            }
+            Usuarios = _usuarios;
         }
+    }
 
-        private async void Regresar(object sender, EventArgs e)
+    // Método de cambio de texto en el campo de búsqueda
+    private void CambioDeTexto(object sender, TextChangedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(e.NewTextValue))
         {
-            await MainPageView.Navigation.PopAsync();
+            Usuarios = _usuarios;
         }
+        else
+        {
+            FiltrarPorNombre(e.NewTextValue);
+        }
+    }
+
+    //Método para regresar a la página anterior
+    private async void Regresar(object sender, EventArgs e)
+    {
+        await MainPageView.Navigation.PopAsync();
+    }
+
+    // Método para administrar usuarios
     private async void AdministrarUsuarios(object sender, EventArgs e)
     {
         // Obtener el usuario seleccionado
@@ -82,11 +89,12 @@ namespace SugahriStore;
         }
     }
 
-
+    // Método para insertar un nuevo usuario
     private async void InsertarUsuario(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(AdminView);
-
-        }
+    {
+        await Navigation.PushAsync(AdminView);
+    }
 }
+
+
 

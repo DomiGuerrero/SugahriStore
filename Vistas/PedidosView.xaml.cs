@@ -88,8 +88,10 @@ namespace SugahriStore
 
         private void FiltrarPorNombrePedido(string filtro)
         {
+            // Filtrar la lista de pedidos por el nombre del pedido
             Pedidos = _pedidos.Where(p => p.Nombre.ToLower().Contains(filtro.ToLower())).ToList();
 
+            // Si no hay pedidos que coincidan con el filtro, mostrar todos los pedidos
             if (!Pedidos.Any())
             {
                 Pedidos = _pedidos;
@@ -98,34 +100,47 @@ namespace SugahriStore
 
         private void CambioDeTexto(object sender, TextChangedEventArgs e)
         {
+            // Verificar si el nuevo texto está en blanco o nulo
             if (string.IsNullOrWhiteSpace(e.NewTextValue))
             {
+                // Si el texto está vacío, mostrar todos los pedidos
                 Pedidos = _pedidos;
             }
             else
             {
+                // Filtrar los pedidos por el nuevo texto ingresado
                 FiltrarPorNombrePedido(e.NewTextValue);
             }
         }
 
         private async void DetallePedido(object sender, EventArgs e)
         {
+            // Obtener el botón que generó el evento
             var button = sender as Button;
+
+            // Obtener el pedido asociado al botón
             var pedido = button?.BindingContext as Pedido;
+
+            // Verificar si se obtuvo un pedido válido
             if (pedido != null)
             {
+                // Navegar a la página de detalle del pedido, pasando el pedido como parámetro
                 await Navigation.PushAsync(new DetallePedido(MainPageView, pedido));
             }
         }
 
         public async Task VerDetallesCommand(Pedido pedido)
         {
+            // Crear una instancia de la página de detalle del pedido, pasando el pedido y la vista principal como parámetros
             DetallePedido detallePage = new DetallePedido(MainPageView, pedido);
+
+            // Navegar a la página de detalle del pedido
             await Navigation.PushAsync(detallePage);
         }
 
         private async void Regresar(object sender, EventArgs e)
         {
+            // Regresar a la página anterior
             await MainPageView.Navigation.PopAsync();
         }
 

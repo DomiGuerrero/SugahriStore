@@ -6,7 +6,6 @@ namespace SugahriStore;
 public partial class RegistroView : ContentPage
 {
     private UsuariosRepositorio UsuariosRepositorio = new();
-    private RolesRepositorio RolesRepositorio = new();
     private MainPage mainPage;
 
     public RegistroView()

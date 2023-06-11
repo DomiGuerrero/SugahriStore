@@ -20,7 +20,7 @@ public partial class MainPage : ContentPage
     private LoginView LoginView; // Vista de inicio de sesión
 
     private RolesRepositorio RolesRepositorio = new(); // Repositorio de roles
-    private Usuario Usuario { get; set; } // Usuario actual
+    public Usuario Usuario { get; set; } // Usuario actual
 
     private static string imagesDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "ImagesView"); // Directorio de imágenes
     private List<string> _images = new List<string>
@@ -67,24 +67,24 @@ public partial class MainPage : ContentPage
 
     private void Button2_Clicked(object sender, EventArgs e)
     {
-        // Navegar a la vista de Importación
-        ImportView = new ImportView();
-        Navigation.PushAsync(ImportView);
-    }
-
-    private void Button3_Clicked(object sender, EventArgs e)
-    {
-        // Verificar el rol del usuario y permitir acceso a UsuariosView solo si es administrador
         if (Usuario.Rol.Nombre.Equals("ADMIN"))
         {
-            EtiquetasView = new EtiquetasView(this);
-            Navigation.PushAsync(EtiquetasView);
+            // Navegar a la vista de Importación
+            ImportView = new ImportView();
+            Navigation.PushAsync(ImportView);
         }
         else
         {
             // Mostrar mensaje de acceso restringido si el usuario no es administrador
             DisplayAlert("Acceso Restringido", "No puede acceder a esta funcionalidad sin permisos de administrador", "Aceptar");
         }
+    }
+
+    private void Button3_Clicked(object sender, EventArgs e)
+    {
+        // Verificar el rol del usuario y permitir acceso a UsuariosView solo si es administrador
+        EtiquetasView = new EtiquetasView(this);
+        Navigation.PushAsync(EtiquetasView);
     }
 
     private void Button4_Clicked(object sender, EventArgs e)

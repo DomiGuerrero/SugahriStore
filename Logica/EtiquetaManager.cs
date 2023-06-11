@@ -79,7 +79,7 @@ namespace SugahriStore.Logica
             // Calcular posiciones verticales de las líneas de texto
             float pedidoY = textY - 75 + GetScaledTextOffset(imagenFondo, 0.1f);
             float direccionPedidoY = pedidoY + pedidoPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.02f);
-            float paisY = direccionPedidoY + direccionPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.1f);
+            float paisY = direccionPedidoY + direccionPaint.TextSize + GetScaledTextOffset(imagenFondo, 0.01f);
 
             canvas.DrawText(nombre, textX, pedidoY, pedidoPaint);
 

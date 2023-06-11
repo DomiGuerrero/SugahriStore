@@ -58,31 +58,39 @@ namespace SugahriStore
 
         private async void BorrarSeleccionados(object sender, EventArgs e)
         {
-            // Obtén una lista de los pedidos seleccionados que se van a borrar
-            var pedidosABorrar = PedidosSeleccionados.ToList();
-            if (pedidosABorrar.Count != 0)
+            if (MainPageView.Usuario.Rol.Nombre.Equals("ADMIN"))
             {
-                bool confirmacion = await DisplayAlert("Confirmación", "¿Estás seguro de que deseas borrar los pedidos seleccionados?", "Sí", "No");
-                if (confirmacion)
+                    // Obtén una lista de los pedidos seleccionados que se van a borrar
+                    var pedidosABorrar = PedidosSeleccionados.ToList();
+                if (pedidosABorrar.Count != 0)
                 {
-                    // Borrar los pedidos de la base de datos
-                    foreach (var pedido in pedidosABorrar)
+                    bool confirmacion = await DisplayAlert("Confirmación", "¿Estás seguro de que deseas borrar los pedidos seleccionados?", "Sí", "No");
+                    if (confirmacion)
                     {
-                        PedidosRepositorio.BorrarPedido(pedido);
+                        // Borrar los pedidos de la base de datos
+                        foreach (var pedido in pedidosABorrar)
+                        {
+                            PedidosRepositorio.BorrarPedido(pedido);
+                        }
+
+                        // Borrar los pedidos de la lista local
+                        _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
+
+                        // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
+                        Pedidos = _pedidos.ToList();
+                        PedidosSeleccionados.Clear();
+                        await DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
                     }
-
-                    // Borrar los pedidos de la lista local
-                    _pedidos.RemoveAll(p => pedidosABorrar.Contains(p));
-
-                    // Actualizar la lista de pedidos filtrados y la lista de pedidos seleccionados
-                    Pedidos = _pedidos.ToList();
-                    PedidosSeleccionados.Clear();
-                    await DisplayAlert("Éxito", "Pedidos borrados correctamente", "Aceptar");
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
                 }
             }
             else
             {
-                await DisplayAlert("Error", "No hay ningún pedido seleccionado", "Aceptar");
+                // Mostrar mensaje de acceso restringido si el usuario no es administrador
+                DisplayAlert("Acceso Restringido", "No puede acceder a esta funcionalidad sin permisos de administrador", "Aceptar");
             }
         }
 
@@ -115,17 +123,24 @@ namespace SugahriStore
 
         private async void DetallePedido(object sender, EventArgs e)
         {
-            // Obtener el botón que generó el evento
-            var button = sender as Button;
+            if (MainPageView.Usuario.Rol.Nombre.Equals("ADMIN")) { 
+                // Obtener el botón que generó el evento
+                var button = sender as Button;
 
-            // Obtener el pedido asociado al botón
-            var pedido = button?.BindingContext as Pedido;
+                // Obtener el pedido asociado al botón
+                var pedido = button?.BindingContext as Pedido;
 
-            // Verificar si se obtuvo un pedido válido
-            if (pedido != null)
+                // Verificar si se obtuvo un pedido válido
+                if (pedido != null)
+                {
+                    // Navegar a la página de detalle del pedido, pasando el pedido como parámetro
+                    await Navigation.PushAsync(new DetallePedido(MainPageView, pedido));
+                }
+            }
+            else
             {
-                // Navegar a la página de detalle del pedido, pasando el pedido como parámetro
-                await Navigation.PushAsync(new DetallePedido(MainPageView, pedido));
+                // Mostrar mensaje de acceso restringido si el usuario no es administrador
+                DisplayAlert("Acceso Restringido", "No puede acceder a esta funcionalidad sin permisos de administrador", "Aceptar");
             }
         }
 
